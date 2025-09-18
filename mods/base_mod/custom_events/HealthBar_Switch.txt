@@ -1,0 +1,3 @@
+value 1: New Healthbar!
+Current Healthbars:
+twiddle(colors are bugged),legacy,yume,quintet,smile, niki, unholy(extremely fucked), vegas, finale

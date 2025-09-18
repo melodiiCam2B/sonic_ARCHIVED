@@ -1,0 +1,32 @@
+{
+	"storyName": "Debuggers",
+	"difficulties": "Debug, Fixed",
+	"hideFreeplay": false,
+	"weekBackground": "no",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": true,
+	"songs": [
+		[
+			"debugger",
+			"thefunny",
+			[
+				146,
+				113,
+				253
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "Guh Type SHIT"
+}

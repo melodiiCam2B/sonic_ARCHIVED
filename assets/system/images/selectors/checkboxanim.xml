@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="checkboxanime.png">
+	<!-- Created with Adobe Animate version 23.0.2.103 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="checkbox finish0000" x="4" y="4" width="55" height="57"/>
+	<SubTexture name="checkbox anim0000" x="4" y="4" width="55" height="57"/>
+	<SubTexture name="checkbox anim reverse0000" x="60" y="4" width="55" height="57"/>
+	<SubTexture name="checkbox0000" x="60" y="4" width="55" height="57"/>
+</TextureAtlas>

@@ -1,0 +1,41 @@
+{
+  "storyName": "the girl from planet 024",
+  "difficulties": "Normal",
+  "hideFreeplay": false,
+  "weekBackground": "nikku",
+  "freeplayColor": [
+    146,
+    113,
+    253
+  ],
+  "weekBefore": "tutorial",
+  "startUnlocked": true,
+  "weekCharacters": [
+    "",
+    "",
+    ""
+  ],
+  "songs": [
+    [
+      "tutorial",
+      "sprinklzgf",
+      [
+        166,
+        36,
+        88
+      ]
+    ],
+    [
+      "024girl",
+      "nikku",
+      [
+        166,
+        36,
+        88
+      ]
+    ]
+  ],
+  "hideStoryMode": true,
+  "weekName": "nikku",
+  "hiddenUntilUnlocked": false
+}

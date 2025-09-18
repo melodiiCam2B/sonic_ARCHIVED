@@ -1,0 +1,26 @@
+[
+	{
+		"save": "healthbarskin",
+		"name": "HeathBar Skin!",
+		"type": "string",
+		"description": "Gameplay Hud",
+		"value": "TwiddleFinger",
+		"format": "%v",
+		"options": ["twiddle","legacy","yume","quintet","smile", "niki", "unholy", "vegas", "finale"]
+	},
+	{
+		"save": "iconskinstuff",
+		"name": "Window Icon",
+		"type": "string",
+		"description": "Changes the window icon",
+		"value": "gf",
+		"options": ["gf","bf","dd","mm","pico","nene","darnell","lemon","beta","tankman","skinNpump","gfsprinklez","16bit","iconOG","beta"]
+	},
+	{
+		"save": "noteSwing",
+		"name": "Note-Swing",
+		"type": "bool",
+		"description": "If checked, will enable note-swing",
+		"value": false
+	},
+]

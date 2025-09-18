@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Minus Kaity.png">
+	<!-- Created with Adobe Animate version 19.2.0.405 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Kaity BopFinal0000" x="0" y="0" width="394" height="664" frameX="-13" frameY="-7" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0001" x="0" y="0" width="394" height="664" frameX="-13" frameY="-7" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0002" x="394" y="0" width="390" height="665" frameX="-12" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0003" x="394" y="0" width="390" height="665" frameX="-12" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0004" x="784" y="0" width="394" height="664" frameX="-8" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0005" x="784" y="0" width="394" height="664" frameX="-8" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0006" x="1178" y="0" width="398" height="668" frameX="-7" frameY="-2" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0007" x="1178" y="0" width="398" height="668" frameX="-7" frameY="-2" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0008" x="1576" y="0" width="398" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0009" x="1576" y="0" width="398" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0010" x="0" y="670" width="398" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0011" x="398" y="670" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0012" x="398" y="670" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0013" x="797" y="670" width="399" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0014" x="797" y="670" width="399" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0015" x="1196" y="670" width="415" height="667" frameX="0" frameY="-4" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0016" x="1196" y="670" width="415" height="667" frameX="0" frameY="-4" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0017" x="1611" y="670" width="414" height="664" frameX="-1" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0018" x="1611" y="670" width="414" height="664" frameX="-1" frameY="-6" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0019" x="0" y="1341" width="405" height="667" frameX="-7" frameY="-3" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0020" x="0" y="1341" width="405" height="667" frameX="-7" frameY="-3" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0021" x="405" y="1341" width="401" height="669" frameX="-8" frameY="-1" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0022" x="405" y="1341" width="401" height="669" frameX="-8" frameY="-1" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0023" x="806" y="1341" width="399" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0024" x="806" y="1341" width="399" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0025" x="1205" y="1341" width="399" height="670" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0026" x="1604" y="1341" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0027" x="1604" y="1341" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0028" x="0" y="2012" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+	<SubTexture name="Kaity BopFinal0029" x="0" y="2012" width="399" height="671" frameX="-8" frameY="0" frameWidth="415" frameHeight="671"/>
+</TextureAtlas>

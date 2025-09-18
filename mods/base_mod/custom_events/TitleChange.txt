@@ -1,0 +1,4 @@
+value 1: Game Title
+Value 2: Game Icon
+
+(resets when onDestroy is called)

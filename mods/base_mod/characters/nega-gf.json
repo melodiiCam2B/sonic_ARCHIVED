@@ -1,0 +1,91 @@
+{
+	"animations": [
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				-100
+			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "gf idle real",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				-101
+			],
+			"anim": "idle angry",
+			"fps": 24,
+			"name": "gf idle angry",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				0
+			],
+			"anim": "final",
+			"fps": 24,
+			"name": "gf final",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				3,
+				-18
+			],
+			"anim": "laugh",
+			"fps": 24,
+			"name": "gf laugh",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				4,
+				-97
+			],
+			"anim": "reaction",
+			"fps": 24,
+			"name": "gf reaction",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				5,
+				-117
+			],
+			"anim": "shoot",
+			"fps": 24,
+			"name": "gf shoots",
+			"indices": []
+		}
+	],
+	"vocals_file": "",
+	"no_antialiasing": false,
+	"image": "characters/goon/nega-gf",
+	"position": [
+		0,
+		220
+	],
+	"healthicon": "face",
+	"flip_x": false,
+	"healthbar_colors": [
+		161,
+		161,
+		161
+	],
+	"camera_position": [
+		0,
+		0
+	],
+	"sing_duration": 4,
+	"scale": 1,
+	"_editor_isPlayer": true
+}

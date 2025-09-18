@@ -1,0 +1,32 @@
+{
+	"storyName": "tears",
+	"difficulties": "Rain",
+	"hideFreeplay": false,
+	"weekBackground": "no",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": true,
+	"songs": [
+		[
+			"tears",
+			"thefunny",
+			[
+				146,
+				113,
+				253
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "mother fucking Gentleman"
+}

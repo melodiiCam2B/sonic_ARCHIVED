@@ -1,0 +1,8 @@
+{
+	"name": " Kool Kidz Klub",
+	"description": "HIHIHIHIHIHUHU (won't be shown in the actual mod)",
+	"restart":false,
+	"runsGlobally": false,
+	"color": [170, 0, 255],
+	"iconFramerate": 10
+}
