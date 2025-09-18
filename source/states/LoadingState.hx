@@ -68,30 +68,21 @@ class LoadingState extends MusicBeatState
 	var curPercent:Float = 0;
 	var stateChangeDelay:Float = 0;
 
-	#if PSYCH_WATERMARKS
-	var logo:FlxSprite;
-	var pessy:FlxSprite;
-	var loadingText:FlxText;
+	override function create(){
 
-	var timePassed:Float;
-	var shakeFl:Float;
-	var shakeMult:Float = 0;
-	
-	var isSpinning:Bool = false;
-	var spawnedPessy:Bool = false;
-	var pressedTimes:Int = 0;
-	#else
-	var funkay:FlxSprite;
-	#end
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('load'));
+		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.setGraphicSize(Std.int(bg.width * 1.175),Std.int(bg.width * 1.175));
+		bg.updateHitbox();
+		bg.screenCenter();
+		add(bg);
 
-	#if HSCRIPT_ALLOWED
-	var hscript:HScript;
-	#end
-	override function create()
-	{
+
 		persistentUpdate = true;
 		barGroup = new FlxSpriteGroup();
 		add(barGroup);
+
+
 
 		var barBack:FlxSprite = new FlxSprite(0, 660).makeGraphic(1, 1, FlxColor.BLACK);
 		barBack.scale.set(FlxG.width - 300, 25);
@@ -99,84 +90,13 @@ class LoadingState extends MusicBeatState
 		barBack.screenCenter(X);
 		barGroup.add(barBack);
 
-		bar = new FlxSprite(barBack.x + 5, barBack.y + 5).makeGraphic(1, 1, FlxColor.WHITE);
+		var bar:FlxSprite = new FlxSprite(barBack.x + 5, barBack.y + 5).makeGraphic(1, 1, FlxColor.WHITE);
 		bar.scale.set(0, 15);
 		bar.updateHitbox();
 		barGroup.add(bar);
 		barWidth = Std.int(barBack.width - 10);
 
-		#if HSCRIPT_ALLOWED
-		if(Mods.currentModDirectory != null && Mods.currentModDirectory.trim().length > 0)
-		{
-			var scriptPath:String = 'mods/${Mods.currentModDirectory}/data/LoadingScreen.hx'; //mods/My-Mod/data/LoadingScreen.hx
-			if(FileSystem.exists(scriptPath))
-			{
-				try
-				{
-					hscript = new HScript(null, scriptPath);
-					hscript.set('getLoaded', function() return loaded);
-					hscript.set('getLoadMax', function() return loadMax);
-					hscript.set('barBack', barBack);
-					hscript.set('bar', bar);
-	
-					if(hscript.exists('onCreate'))
-					{
-						hscript.call('onCreate');
-						trace('initialized hscript interp successfully: $scriptPath');
-						return super.create();
-					}
-					else
-					{
-						trace('"$scriptPath" contains no \"onCreate" function, stopping script.');
-					}
-				}
-				catch(e:IrisError)
-				{
-					var pos:HScriptInfos = cast {fileName: scriptPath, showLine: false};
-					Iris.error(Printer.errorToString(e, false), pos);
-					var hscript:HScript = cast (Iris.instances.get(scriptPath), HScript);
-				}
-				if(hscript != null) hscript.destroy();
-				hscript = null;
-			}
-		}
-		#end
 
-		#if PSYCH_WATERMARKS // PSYCH LOADING SCREEN
-		var bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.setGraphicSize(Std.int(FlxG.width));
-		bg.color = 0xFFD16FFF;
-		bg.updateHitbox();
-		addBehindBar(bg);
-	
-		loadingText = new FlxText(520, 600, 400, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
-		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
-		loadingText.borderSize = 2;
-		addBehindBar(loadingText);
-	
-		logo = new FlxSprite(0, 0).loadGraphic(Paths.image('loading_screen/icon'));
-		logo.antialiasing = ClientPrefs.data.antialiasing;
-		logo.scale.set(0.75, 0.75);
-		logo.updateHitbox();
-		logo.screenCenter();
-		logo.x -= 50;
-		logo.y -= 40;
-		addBehindBar(logo);
-
-		#else // BASE GAME LOADING SCREEN
-		var bg = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
-		bg.scale.set(FlxG.width, FlxG.height);
-		bg.updateHitbox();
-		bg.screenCenter();
-		addBehindBar(bg);
-
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
-		funkay.antialiasing = ClientPrefs.data.antialiasing;
-		funkay.setGraphicSize(0, FlxG.height);
-		funkay.updateHitbox();
-		addBehindBar(funkay);
-		#end
 		super.create();
 
 		if (stateChangeDelay <= 0 && checkLoaded())
@@ -220,99 +140,8 @@ class LoadingState extends MusicBeatState
 			bar.scale.x = barWidth * curPercent;
 			bar.updateHitbox();
 		}
-		
-		#if HSCRIPT_ALLOWED
-		if(hscript != null)
-		{
-			if(hscript.exists('onUpdate')) hscript.call('onUpdate', [elapsed]);
-			return;
-		}
-		#end
 
-		#if PSYCH_WATERMARKS // PSYCH LOADING SCREEN
-		timePassed += elapsed;
-		shakeFl += elapsed * 3000;
-		var dots:String = '';
-		switch(Math.floor(timePassed % 1 * 3))
-		{
-			case 0:
-				dots = '.';
-			case 1:
-				dots = '..';
-			case 2:
-				dots = '...';
-		}
-		loadingText.text = Language.getPhrase('now_loading', 'Now Loading{1}', [dots]);
-
-		if(!spawnedPessy)
-		{
-			if(!transitioning && controls.ACCEPT)
-			{
-				shakeMult = 1;
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				pressedTimes++;
-			}
-			shakeMult = Math.max(0, shakeMult - elapsed * 5);
-			logo.offset.x = Math.sin(shakeFl * Math.PI / 180) * shakeMult * 100;
-
-			if(pressedTimes >= 5)
-			{
-				FlxG.camera.fade(0xAAFFFFFF, 0.5, true);
-				logo.visible = false;
-				spawnedPessy = true;
-				stateChangeDelay = 5;
-				FlxG.sound.play(Paths.sound('secret'));
-
-				pessy = new FlxSprite(700, 140);
-				pessy.frames = Paths.getSparrowAtlas('loading_screen/pessy');
-				pessy.animation.addByPrefix('run', 'run', 24, true);
-				pessy.animation.addByPrefix('spin', 'spin', 24, true);
-				pessy.antialiasing = ClientPrefs.data.antialiasing;
-				pessy.flipX = (logo.offset.x > 0);
-				pessy.visible = false;
-
-				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-					pessy.x = FlxG.width + 200;
-					pessy.velocity.x = -1100;
-					if(pessy.flipX)
-					{
-						pessy.x = -pessy.width - 200;
-						pessy.velocity.x *= -1;
-					}
-		
-					pessy.visible = true;
-					pessy.animation.play('run', true);
-					#if ACHIEVEMENTS_ALLOWED Achievements.unlock('pessy_easter_egg'); #end
-					
-					insert(members.indexOf(loadingText), pessy);
-				});
-			}
-		}
-		else if(!isSpinning && (pessy.flipX && pessy.x > FlxG.width) || (!pessy.flipX && pessy.x < -pessy.width))
-		{
-			isSpinning = true;
-			pessy.animation.play('spin', true);
-			pessy.flipX = false;
-			pessy.x = 500;
-			pessy.y = FlxG.height + 500;
-			pessy.velocity.x = 0;
-			FlxTween.tween(pessy, {y: 10}, 0.65, {ease: FlxEase.quadOut});
-		}
-		#end
 	}
-
-	#if HSCRIPT_ALLOWED
-	override function destroy()
-	{
-		if(hscript != null)
-		{
-			if(hscript.exists('onDestroy')) hscript.call('onDestroy');
-			hscript.destroy();
-		}
-		hscript = null;
-		super.destroy();
-	}
-	#end
 	
 	var finishedLoading:Bool = false;
 	function onLoad()
