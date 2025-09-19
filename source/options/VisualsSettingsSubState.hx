@@ -21,7 +21,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		splashes = new FlxTypedGroup<NoteSplash>();
 		for (i in 0...Note.colArray.length)
 		{
-			var note:StrumNote = new StrumNote(370 + (560 / Note.colArray.length) * i, -200, i, 0);
+			var note:StrumNote = new StrumNote(70 + (560 / Note.colArray.length) * i, -200, i, 0);
 			changeNoteSkin(note);
 			notes.add(note);
 			

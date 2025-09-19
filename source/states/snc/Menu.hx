@@ -27,129 +27,190 @@ import backend.Song;
 import states.PlayState;
 
 class Menu extends MusicBeatState{
-    var songs:Array<SongMetadata> = [];
-	var curSelected:Int = 0;
+    var songs:Array<Array<String>> = [//row 1
+		['too-fest', 'Original: Punkett\nRemix: Melodii2b\nArt: ???\nChart: KitKat', 'sanic'], 
+		['milk', 'Original: Squeaks\nRemix: KitKat\nArt: ???\nChart: KitKat', 'sunky']
+	];
+	var select:Array<String> = ['Stage Select', 'Settings', 'Credits', 'Exit'];
+	var options:Array<String> = ['Controls', 'Graphics', 'Visuals', 'Gameplay'];
     var curDifficulty:Int = -1;
-
-    var missingTextBG:FlxSprite;
-	var missingText:FlxText;
-
+    var curSelected:Int = 0;
+   	var curOption:Int = 0;
+	var storeGroupY:Float = -1;
+	var cardGroup:FlxSpriteGroup;
+	var txtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
+	var selected = new FlxSprite();
    	override public function create(){
-        for (i in 0...WeekData.weeksList.length){
-			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			var leSongs:Array<String> = [];
-			var leChars:Array<String> = [];
+		PlayState.isStoryMode = false;
+		var bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
+		bg.setGraphicSize(FlxG.width, FlxG.height);
+		add(bg);
+		bg.screenCenter();
 
-			for (j in 0...leWeek.songs.length){
-				leSongs.push(leWeek.songs[j][0]);
-				leChars.push(leWeek.songs[j][1]);
-			}
-
-			WeekData.setDirectoryFromWeek(leWeek);
-
-			for (song in leWeek.songs)
-			{
-				var colors:Array<Int> = song[2];
-				if(colors == null || colors.length < 3)
-				{
-					colors = [146, 113, 253];
-				}
-				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
-			}
+		for(i in 0...select.length){
+			var options = new FlxText();
+        	options.text = select[i];
+        	options.setFormat(Paths.font('Sonic Advanced 2.ttf'), 60, FlxColor.WHITE);
+        	options.y = 50 + i * options.height;
+        	options.x = 40;
+        	txtGroup.add(options);
 		}
 
-		for (i in 0...songs.length){
-			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
-			songText.targetY = i;
-			grpSongs.add(songText);
+		changeOption();
+		add(selected);
+		add(txtGroup);
 
-			songText.scaleX = Math.min(1, 980 / songText.width);
-			songText.snapToPosition();
-
-			Mods.currentModDirectory = songs[i].folder;
-
-
-			
-			songText.visible = songText.active = songText.isMenuItem = false;
-			icon.visible = icon.active = false;
-
-
+		cardGroup = new FlxSpriteGroup();
+		for(i in 0...songs.length){
+			var newCard = new Plate(songs[i][0],songs[i][1]/**,songs[i][2]**/);
+			newCard.x += i * 380;
+			cardGroup.add(newCard);
 		}
-		WeekData.setDirectoryFromWeek();
-
-		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		missingTextBG.alpha = 0.6;
-		missingTextBG.visible = false;
-		add(missingTextBG);
-		
-		missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
-		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		missingText.scrollFactor.set();
-		missingText.visible = false;
-		add(missingText);
+		cardGroup.screenCenter();
+		storeGroupY = cardGroup.y;
+		cardGroup.y += 720;
+		add(cardGroup);
     }
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
-        songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
-	
+	var mousey:Float = 0;
+	var ogTexty:Float = 0;
+	var wheely:Float = 0;
+	var isdrag:Bool = false;
+	var freePlay:Bool = false;
+	var settings:Bool = false;
     override public function update(elapsed:Float){
-        if (controls.ACCEPT){
-			persistentUpdate = false;
-			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
-			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-
-			try
-			{
-				Song.loadFromJson(poop, songLowercase);
-				PlayState.isStoryMode = false;
-				PlayState.storyDifficulty = curDifficulty;
-			}
-			catch(e:haxe.Exception)
-			{
-				trace('ERROR! ${e.message}');
-
-				var errorStr:String = e.message;
-				if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length-1); //Missing chart
-				else errorStr += '\n\n' + e.stack;
-
-				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
-				missingText.screenCenter(Y);
-				missingText.visible = true;
-				missingTextBG.visible = true;
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-
-				updateTexts(elapsed);
-				super.update(elapsed);
-				return;
+		if(freePlay){
+			if (FlxG.mouse.justPressed){
+				mousey = FlxG.mouse.screenX;
+				ogTexty = cardGroup.x;
 			}
 
-			@:privateAccess
-			if(PlayState._lastLoadedModDirectory != Mods.currentModDirectory)
-			{
-				trace('CHANGED MOD DIRECTORY, RELOADING STUFF');
-				Paths.freeGraphicsFromMemory();
+			if(FlxG.mouse.pressed){
+				wheely = ogTexty - (mousey - FlxG.mouse.x);
+				var lerpVal:Float = boundTo(elapsed * 9, 0, 1);
+				cardGroup.x = FlxMath.lerp(cardGroup.x, wheely, lerpVal);
+				isdrag = true;
 			}
-			LoadingState.prepareToSong();
-			LoadingState.loadAndSwitchState(new PlayState());
+
+			if(isdrag){
+				if(cardGroup.x > (FlxG.width- 30)) cardGroup.x = FlxG.width - 40;
+				else if(cardGroup.x < (-FlxG.width- 30)) cardGroup.x = -FlxG.width - 40;	
+			}
+
+			if(FlxG.mouse.justReleased)isdrag = false;
+			
+			if (controls.BACK) {
+				FlxTween.tween(cardGroup, {y: storeGroupY + 720}, 0.5, {onComplete: function(twn:FlxTween){
+				freePlay = false;
+				isdrag = false;
+        		}});
+			}
+
+			// if (controls.ACCEPT){
+			// 	persistentUpdate = false;
+			// 	var songLowercase:String = Paths.formatToSongPath(songs[curSelected]);
+			// 	var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+
+			// 	Song.loadFromJson(poop, songLowercase);
+			// 	PlayState.storyDifficulty = curDifficulty;
+
+			// 	LoadingState.prepareToSong();
+			// 	LoadingState.loadAndSwitchState(new PlayState());
+			// }
+
+			txtGroup.forEach(function(spr:FlxText){
+				spr.alpha = 0.5;
+			});
+		}else if(settings){
+			if(FlxG.keys.justPressed.LEFT ||FlxG.keys.justPressed.RIGHT) changeSub(FlxG.keys.justPressed.LEFT? -1 : 1);
+			if (controls.ACCEPT) openSelectedSubstate(options[curOption]);
+			
+			if (controls.BACK){
+				var curMember:FlxText = txtGroup.members[curSelected];
+				curMember.text = 'Settings';
+				changeOption();
+				settings = false;
+			}
+		}else{
+			txtGroup.forEach(function(spr:FlxText){
+				spr.alpha = 1;
+			});
+
+        	if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN){
+            	changeOption(FlxG.keys.justPressed.UP? -1 : 1);
+        	}
+			
+			if (controls.ACCEPT){
+				switch(select[curSelected]){
+					case 'Stage Select':
+						FlxTween.tween(cardGroup, {y: storeGroupY}, 0.5, {onComplete: function(twn:FlxTween){
+							freePlay = true;
+        				}});
+					case 'Settings': 
+						changeSub();
+						settings = true;
+					case 'Credits': 
+						MusicBeatState.switchState(new states.snc.Credits());
+					case 'Exit': 
+						Sys.exit(0);
+				}
+			}
 		}
     }
+	function changeSub(?i:Int = 0){
+		curOption = FlxMath.wrap(curOption + i, 0, select.length - 1);
 
-}
+		var curMember:FlxText = txtGroup.members[curSelected];
+		curMember.text = 'Settings > ';
+		setText(options[curOption], curMember);
+	}
 
-class SongMetadata {
-	public var songName:String = "";
-	public var week:Int = 0;
-	public var songCharacter:String = "";
-	public var color:Int = -7179779;
-	public var folder:String = "";
-	public var lastDifficulty:String = null;
+    public function setText(txt:String, txtSpr:FlxText) {
+        var toInt:Int = txt.length;
 
-	public function new(song:String, week:Int, songCharacter:String, color:Int){
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
-		this.color = color;
-		this.folder = Mods.currentModDirectory;
-		if(this.folder == null) this.folder = '';
+        var i:Int = 0;
+        new FlxTimer().start(0.04, function(tmr:FlxTimer) {
+            txtSpr.text += txt.charAt(i);
+
+			selected.makeGraphic(Std.int(txtSpr.width + 20),Std.int(txtSpr.height) , FlxColor.BLACK);
+			selected.x = txtSpr.x + (txtSpr.width - selected.width) / 2;
+        	selected.y = txtSpr.y + (txtSpr.height - selected.height) / 2;
+            i+=1;
+            if (i >= toInt) {
+                tmr.cancel();
+
+            }
+        }, toInt);
+    }
+
+	function openSelectedSubstate(label:String) {
+		switch(label){
+			case 'Controls':
+				// openSubState(new options.snc.opt.subs.Control());
+			case 'Graphics':
+				openSubState(new states.snc.opt.subs.Graphic());
+			case 'Visuals':
+				openSubState(new states.snc.opt.subs.Visual());
+			case 'Gameplay':
+				openSubState(new states.snc.opt.subs.Gameplay());
+		}
+	}
+
+	function changeOption(?i:Int = 0){
+		curSelected = FlxMath.wrap(curSelected + i, 0, select.length - 1);
+
+		var curMember:FlxText = txtGroup.members[curSelected];
+		selected.makeGraphic(Std.int(curMember.width + 20),Std.int(curMember.height) , FlxColor.BLACK);
+		selected.x = curMember.x + (curMember.width - selected.width) / 2;
+        selected.y = curMember.y + (curMember.height - selected.height) / 2;
+	}
+
+	public static function boundTo(value:Float, min:Float, max:Float):Float {
+		var newValue:Float = value;
+		if (newValue < min)
+			newValue = min;
+		else if (newValue > max)
+			newValue = max;
+		return newValue;
 	}
 }

@@ -5,8 +5,8 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.FlxGamepadManager;
 
-import objects.CheckboxThingie;
-import objects.AttachedText;
+import options.OpChk;
+import options.OpTxtAtt;
 import options.Option;
 import backend.InputFormatter;
 
@@ -16,9 +16,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	private var curSelected:Int = 0;
 	private var optionsArray:Array<Option>;
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
-	private var grpTexts:FlxTypedGroup<AttachedText>;
+	private var grpOptions:FlxTypedGroup<OpTxt>;
+	private var checkboxGroup:FlxTypedGroup<OpChk>;
+	private var grpTexts:FlxTypedGroup<OpTxtAtt>;
 
 	private var descBox:FlxSprite;
 	private var descText:FlxText;
@@ -38,28 +38,27 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
+		bg.setGraphicSize(FlxG.width, FlxG.height);
 		add(bg);
+		bg.screenCenter(); 
 
 		// avoids lagspikes while scrolling through menus!
-		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpOptions = new FlxTypedGroup<OpTxt>();
 		add(grpOptions);
 
-		grpTexts = new FlxTypedGroup<AttachedText>();
+		grpTexts = new FlxTypedGroup<OpTxtAtt>();
 		add(grpTexts);
 
-		checkboxGroup = new FlxTypedGroup<CheckboxThingie>();
+		checkboxGroup = new FlxTypedGroup<OpChk>();
 		add(checkboxGroup);
 
 		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.alpha = 0.6;
 		add(descBox);
 
-		var titleText:Alphabet = new Alphabet(75, 45, title, true);
-		titleText.setScale(0.6);
+		var titleText:OpTxt = new OpTxt(75, 45, title, true);
+		titleText.size = Std.int(titleText.size*0.6);
 		titleText.alpha = 0.4;
 		add(titleText);
 
@@ -71,7 +70,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(220, 260, optionsArray[i].name, false);
+			var optionText:OpTxt = new OpTxt(220, 660, optionsArray[i].name, false);
 			optionText.isMenuItem = true;
 			/*optionText.forceX = 300;
 			optionText.yMult = 90;*/
@@ -80,7 +79,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 			if(optionsArray[i].type == BOOL)
 			{
-				var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, Std.string(optionsArray[i].getValue()) == 'true');
+				var checkbox:OpChk = new OpChk(optionText.x - 105, optionText.y, Std.string(optionsArray[i].getValue()) == 'true');
 				checkbox.sprTracker = optionText;
 				checkbox.ID = i;
 				checkboxGroup.add(checkbox);
@@ -90,7 +89,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				optionText.x -= 80;
 				optionText.startPosition.x -= 80;
 				//optionText.xAdd -= 80;
-				var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 60);
+				var valueText:OpTxtAtt = new OpTxtAtt('' + optionsArray[i].getValue(), optionText.width + 60);
 				valueText.sprTracker = optionText;
 				valueText.copyAlpha = true;
 				valueText.ID = i;
@@ -118,8 +117,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	var bindingKey:Bool = false;
 	var holdingEsc:Float = 0;
 	var bindingBlack:FlxSprite;
-	var bindingText:Alphabet;
-	var bindingText2:Alphabet;
+	var bindingText:OpTxt;
+	var bindingText2:OpTxt;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -167,12 +166,12 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
 						add(bindingBlack);
 	
-						bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [curOption.name]), false);
-						bindingText.alignment = CENTERED;
+						bindingText = new OpTxt(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [curOption.name]), false);
+						bindingText.alignment = CENTER;
 						add(bindingText);
 						
-						bindingText2 = new Alphabet(FlxG.width / 2, 340, Language.getPhrase('controls_rebinding2', 'Hold ESC to Cancel\nHold Backspace to Delete'), true);
-						bindingText2.alignment = CENTERED;
+						bindingText2 = new OpTxt(FlxG.width / 2, 340, Language.getPhrase('controls_rebinding2', 'Hold ESC to Cancel\nHold Backspace to Delete'), true);
+						bindingText2.alignment = CENTER;
 						add(bindingText2);
 	
 						bindingKey = true;
@@ -407,12 +406,12 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				text = InputFormatter.getGamepadName(FlxGamepadInputID.fromString(text));
 		}
 
-		var bind:AttachedText = cast option.child;
-		var attach:AttachedText = new AttachedText(text, bind.offsetX);
+		var bind:OpTxtAtt = cast option.child;
+		var attach:OpTxtAtt = new OpTxtAtt(text, bind.offsetX);
 		attach.sprTracker = bind.sprTracker;
 		attach.copyAlpha = true;
 		attach.ID = bind.ID;
-		playstationCheck(attach);
+		// playstationCheck(attach);
 		attach.scaleX = Math.min(1, MAX_KEYBIND_WIDTH / attach.width);
 		attach.x = bind.x;
 		attach.y = bind.y;
@@ -435,7 +434,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			switch(alpha.text)
 			{
 				case '[', ']': //Square and Triangle respectively
-					letter.image = 'alphabet_playstation';
+					letter.image = 'OpTxt_playstation';
 					letter.updateHitbox();
 					
 					letter.offset.x += 4;

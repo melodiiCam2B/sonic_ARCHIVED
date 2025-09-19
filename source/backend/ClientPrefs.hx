@@ -75,13 +75,16 @@ import states.TitleState;
 	public var safeFrames:Float = 10.0;
 	public var guitarHeroSustains:Bool = true;
 	public var discordRPC:Bool = true;
-	public var loadingScreen:Bool = true;
+	public var loadingScreen:Bool = false;
 	public var language:String = 'en-US';
+
 	public var seenWarning:Bool = false;
-	public var showDBG:Bool = true;
-	public var showGIT:Bool = true;
-	public var showSCP:Bool = true;
-	public var showALL:Bool = true;
+
+	public var showDBG:Bool = false;
+	public var showGIT:Bool = false;
+	public var showSCP:Bool = false;
+	public var showALL:Bool = false;
+
 	public var util:Map<String, Dynamic> = [
 		'save_0' => 1.0,
 		'save_1' => ['hi','how','are','ya?'], 

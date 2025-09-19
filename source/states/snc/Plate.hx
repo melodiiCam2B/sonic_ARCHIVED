@@ -1,22 +1,71 @@
 package states.snc;
 
-import flixel.group.FlxSpriteContainer;
-
-class Plate extends FlxSpriteContainer {
+class Plate extends FlxSpriteGroup {
     var body = new FlxSprite();
     var tile = new FlxSprite();
+    var port = new FlxSprite();
+    var txbg = new FlxSprite();
+
     var name = new FlxText();
     var desc = new FlxText();
-    var port = new FlxSprite();
+    var cred = new FlxText();
 
-    var title:String;
-    var credits:String;
+    public var title:String;
+    public var credits:String;
+    public var portrait:String;
 
-    public function new(title:String, credits:String) {
-        
+    public function new(?title:String = 'Place Holder', ?credits:String = 'not added yet',?portrait:String = 'port_temp') {
+        this.title = title;
+        this.credits = credits;
+        this.portrait = portrait;
+        super();
+        __create();
     }
 
-    function setBody(spr:FlxSprite) spr.setGraphicSize(FlxG.width/4, FlxG.height/3);
-    function returnSong() return title;
+    function __create(){
+        body.loadGraphic(Paths.image('cards/back_temp', 'archive'));
+        body.setGraphicSize(1280/5, 720/2*1.2);
+        body.updateHitbox();
+        add(body);
+
+        tile.makeGraphic(Std.int(body.width - 20), 40, FlxColor.BLACK);
+		tile.x = body.x + (body.width - tile.width) / 2;
+        tile.y = body.y + 5;
+        tile.alpha = 0.6;
+		add(tile);
+
+        name.text = title;
+        name.setFormat(Paths.font('Sonic Advanced 2.ttf'), 30, FlxColor.WHITE);
+        name.y = tile.y + (tile.height - name.height) / 2;
+        name.x = tile.x + 2;
+        add(name);
+
+        port.loadGraphic(Paths.image('cards/'+portrait, 'archive'));
+        port.setGraphicSize(body.width - 20, 720/4);
+        port.updateHitbox();
+		port.x = body.x + (body.width - port.width) / 2;
+		port.y = body.y + (body.height - port.height) / 2;
+        port.y -= 68;
+        add(port);
+
+        txbg.makeGraphic(Std.int(body.width - 20),Std.int(port.height) , FlxColor.BLACK);
+		txbg.x = body.x + (body.width - txbg.width) / 2;
+        txbg.y = port.y + port.height + 10;
+        txbg.alpha = 0.6;
+		add(txbg);
+        
+        cred.text = 'CREDITS';
+        cred.setFormat(Paths.font('Sonic Advanced 2.ttf'), 30, FlxColor.WHITE);
+        cred.y = txbg.y + 2;
+        cred.x = txbg.x + 2;
+        add(cred);
+
+        desc.text = credits;
+        desc.setFormat(Paths.font('Sonic Advanced 2.ttf'), 30, FlxColor.WHITE);
+        desc.fieldWidth = txbg.width-4;
+        desc.y = txbg.y + cred.height + 2;
+        desc.x = txbg.x + 2;
+        add(desc);
+    }
 }
 

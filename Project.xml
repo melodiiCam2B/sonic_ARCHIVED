@@ -2,8 +2,8 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app 	title="Wurm Engine" 
-			file="WurmEngine" 
+	<app 	title="Sonic - ARCHIVED" 
+			file="Sonic" 
 			packageName="melodii.cam.2b" 
 			package="melodii.cam.2b" 
 			main="Main" 
@@ -85,9 +85,8 @@
 	<assets path="assets/shared"        exclude="*.mp3" unless="web"/>
 	<assets path="assets/songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         exclude="*.mp3" unless="web"/>
-
-
-
+	<assets path="assets/archive"         exclude="*.ogg" if="web"/>
+	<assets path="assets/archive"         exclude="*.mp3" unless="web"/>
 
 
 	<haxelib name="grig.audio"/>

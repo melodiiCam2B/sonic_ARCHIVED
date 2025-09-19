@@ -8,7 +8,7 @@ import flixel.addons.display.FlxBackdrop;
 class OptionsState extends MusicBeatState
 {
 	var options:Array<String> = [
-		'Note Colors',
+		// 'Note Colors',
 		'Controls',
 		'Adjust Delay and Combo',
 		'Graphics',

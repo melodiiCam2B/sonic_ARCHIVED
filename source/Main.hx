@@ -78,10 +78,10 @@ class Main extends Sprite{
 		git_ = new GITHUBtracker();
 		scp_ = new SCRIPTtracker();
 
-		addChild(fps_);
-		addChild(dbg_);
-		addChild(git_);
-		addChild(scp_);
+		// addChild(fps_);
+		// addChild(dbg_);
+		// addChild(git_);
+		// addChild(scp_);
 
 		fps_.visible = ClientPrefs.data.showFPS;
 		dbg_.visible = ClientPrefs.data.showDBG;
@@ -98,10 +98,10 @@ class Main extends Sprite{
 	}
 
 	public static final game = {
-		width: 1280, // WINDOW width
-		height: 720, // WINDOW height
-		// width: 940, // UT
-		// height: 680, //UT
+		// width: 1280, // WINDOW width
+		// height: 720, // WINDOW height
+		width: 940, // UT
+		height: 680, //UT
 		initialState: Init, // initial game state
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -117,7 +117,11 @@ class Main extends Sprite{
 
 	public function new(){
 		super();
-		init();
+		#if debug
+			makeGame();
+		#else
+			init();
+		#end
 	}
 
 	private function init():Void{

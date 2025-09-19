@@ -1,4 +1,4 @@
-package options;
+package states.snc.opt;
 
 typedef Keybind = {
 	keyboard:String,
@@ -16,7 +16,7 @@ enum OptionType {
 	KEYBIND;
 }
 
-class Option
+class OptOpt
 {
 	public var child:OpTxt;
 	public var text(get, set):String;
