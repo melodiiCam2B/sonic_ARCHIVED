@@ -4,7 +4,7 @@ import objects.Note;
 import objects.StrumNote;
 import objects.NoteSplash;
 import objects.Alphabet;
-
+import states.snc.obj.*;
 class Visual extends OptBase
 {
 	var noteOptionID:Int = -1;

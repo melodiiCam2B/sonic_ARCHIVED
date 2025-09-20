@@ -1,5 +1,5 @@
 package states.snc.opt.subs;
-
+import states.snc.obj.*;
 class Gameplay extends OptBase
 {
 	public function new()

@@ -1,7 +1,7 @@
 package states.snc.opt.subs;
 
 import objects.Character;
-
+import states.snc.obj.*;
 class Graphic extends OptBase{
 
 	public function new(){

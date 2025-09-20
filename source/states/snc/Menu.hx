@@ -25,7 +25,7 @@ import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
 import states.PlayState;
-
+import states.snc.obj.*;
 class Menu extends MusicBeatState{
     var songs:Array<Array<String>> = [//row 1
 		['too-fest', 'Original: Punkett\nRemix: Melodii2b\nArt: ???\nChart: KitKat', 'sanic'], 
@@ -53,6 +53,7 @@ class Menu extends MusicBeatState{
         	options.setFormat(Paths.font('Sonic Advanced 2.ttf'), 60, FlxColor.WHITE);
         	options.y = 50 + i * options.height;
         	options.x = 40;
+			options.ID = i;
         	txtGroup.add(options);
 		}
 
@@ -106,17 +107,21 @@ class Menu extends MusicBeatState{
         		}});
 			}
 
-			// if (controls.ACCEPT){
-			// 	persistentUpdate = false;
-			// 	var songLowercase:String = Paths.formatToSongPath(songs[curSelected]);
-			// 	var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+			if (controls.ACCEPT && !isdrag || FlxG.mouse.justPressed && !isdrag){
+				persistentUpdate = false;
+				cardGroup.forEach(function(card:Plate){
+					if(FlxG.mouse.overlaps(card)){
+						var songLowercase:String = Paths.formatToSongPath(card.title);
+						var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 
-			// 	Song.loadFromJson(poop, songLowercase);
-			// 	PlayState.storyDifficulty = curDifficulty;
+						Song.loadFromJson(poop, songLowercase);
+						PlayState.storyDifficulty = curDifficulty;
 
-			// 	LoadingState.prepareToSong();
-			// 	LoadingState.loadAndSwitchState(new PlayState());
-			// }
+						LoadingState.prepareToSong();
+						LoadingState.loadAndSwitchState(new PlayState());
+					}
+				});
+			}
 
 			txtGroup.forEach(function(spr:FlxText){
 				spr.alpha = 0.5;
@@ -132,6 +137,15 @@ class Menu extends MusicBeatState{
 				settings = false;
 			}
 		}else{
+        	for (i in 0...select.length){
+				var distItem:Int = -1;
+				var memb:FlxSprite = txtGroup.members[i];
+   		    	if(FlxG.mouse.overlaps(memb)){
+					distItem = i;
+					curSelected = distItem;
+                	changeOption();
+				}
+			};
 			txtGroup.forEach(function(spr:FlxText){
 				spr.alpha = 1;
 			});

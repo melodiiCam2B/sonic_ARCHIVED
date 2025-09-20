@@ -4,7 +4,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.FlxGamepadManager;
-
+import states.snc.obj.*;
 
 class OptBase extends MusicBeatSubstate{
     private var curOption:OptOpt = null;
@@ -261,10 +261,11 @@ class OptBase extends MusicBeatSubstate{
 			if(text.ID == curSelected) text.alpha = 1;
 		}
 
-		descBox.setPosition(descText.x - 10, descText.y - 10);
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
-		descBox.updateHitbox();
-
+		descBox.makeGraphic(Std.int(descText.width + 20),Std.int(descText.height) , FlxColor.BLACK);
+		descBox.x = descText.x + (descText.width - descBox.width) / 2;
+        descBox.y = descText.y + (descText.height - descBox.height) / 2;
+		descBox.alpha = 0.6;
+		
 		curOption = optionsArray[curSelected]; //shorter lol
 	}
 

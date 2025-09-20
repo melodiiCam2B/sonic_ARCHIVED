@@ -12,10 +12,10 @@
 	/>
 
 
-	<icon path="art/icons/wurmEngine.png" size='16'/>
-	<icon path="art/icons/wurmEngine.png" size='32'/>
-	<icon path="art/icons/wurmEngine.png" size='64'/>
-	<icon path="art/icons/wurmEngine.png" />
+	<icon path="icolol.png" size='16'/>
+	<icon path="icolol.png" size='32'/>
+	<icon path="icolol.png" size='64'/>
+	<icon path="icolol.png" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="1266759928073162832" />
@@ -70,9 +70,9 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value=".buids/debug" if="debug" />
-	<set name="BUILD_DIR" value=".buids/release" unless="debug" />
-	<set name="BUILD_DIR" value=".buids/32bit" if="32bits" />
+	<set name="BUILD_DIR" value="_/debug"/>
+	<set name="BUILD_DIR" value="_/64bit" unless="build" />
+	<set name="BUILD_DIR" value="_/32bit" if="32bits" />
 	<classpath name="source" />
 
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
