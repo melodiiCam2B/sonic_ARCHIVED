@@ -3,6 +3,7 @@ package backend;
 import flixel.FlxState;
 import backend.PsychCamera;
 import utils.track.SCRIPTtracker;
+import states.snc.obj.*;
 class MusicBeatState extends FlxState
 {
 	private var curSection:Int = 0;
@@ -26,18 +27,20 @@ class MusicBeatState extends FlxState
 		return getState().variables;
 
 	override function create() {
-		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		if(!_psychCameraInitialized) initPsychCamera();
 
 		super.create();
 
-		if(!skip) {
-			openSubState(new CustomFadeTransition(0.5, true));
-		}
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
+	}
+	public function new() {
+		super();
+        new FlxTimer().start(2, function(tmr:FlxTimer) {
+            FlxG.state.openSubState(new Transit(0.5, false));
+        });
 	}
 
 	public function initPsychCamera():PsychCamera
@@ -133,21 +136,16 @@ class MusicBeatState extends FlxState
 
 	public static function switchState(nextState:FlxState = null) {
 		if(nextState == null) nextState = FlxG.state;
-		if(nextState == FlxG.state)
-		{
+		if(nextState == FlxG.state){
 			resetState();
 			return;
 		}
 		SCRIPTtracker.hxScript = SCRIPTtracker.luaScript = SCRIPTtracker.allScripts = 0;
-		if(FlxTransitionableState.skipNextTransIn) FlxG.switchState(nextState);
-		else startTransition(nextState);
-		FlxTransitionableState.skipNextTransIn = false;
+		startTransition(nextState);
 	}
 
 	public static function resetState() {
-		if(FlxTransitionableState.skipNextTransIn) FlxG.resetState();
-		else startTransition();
-		FlxTransitionableState.skipNextTransIn = false;
+		startTransition();
 	}
 
 	// Custom made Trans in
@@ -156,11 +154,16 @@ class MusicBeatState extends FlxState
 		if(nextState == null)
 			nextState = FlxG.state;
 
-		FlxG.state.openSubState(new CustomFadeTransition(0.5, false));
+		FlxG.state.openSubState(new Transit(0.5, true));
 		if(nextState == FlxG.state)
-			CustomFadeTransition.finishCallback = function() FlxG.resetState();
+			Transit.finishCallback = function() FlxG.resetState();
 		else
-			CustomFadeTransition.finishCallback = function() FlxG.switchState(nextState);
+			Transit.finishCallback = function() FlxG.switchState(nextState);
+	}
+	public static function finishTransition(nextState:FlxState = null){
+        new FlxTimer().start(2, function(tmr:FlxTimer) {
+            FlxG.state.openSubState(new Transit(0.5, false));
+        });
 	}
 
 	public static function getState():MusicBeatState {

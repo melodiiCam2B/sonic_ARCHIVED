@@ -26,12 +26,17 @@ import backend.Highscore;
 import backend.Song;
 import states.PlayState;
 import states.snc.obj.*;
+typedef SongList = {
+  	var songs:Array<Array<String>>;
+}
+typedef CreditDef = {
+  	var credits:Array<Array<String>>;
+}
 class Menu extends MusicBeatState{
-    var songs:Array<Array<String>> = [//row 1
-		['too-fest', 'Original: Punkett\nRemix: Melodii2b\nArt: ???\nChart: KitKat', 'sanic'], 
-		['milk', 'Original: Squeaks\nRemix: KitKat\nArt: ???\nChart: KitKat', 'sunky']
-	];
-	var select:Array<String> = ['Stage Select', 'Settings', 'Credits', 'Exit'];
+	var creditsStuff:Array<Array<String>> = [];
+    var emptyDesc:String = ':< wompity womp womp >:\n(this means there\'s nothing there)';
+    var songs:Array<Array<String>> = [];
+	var select:Array<String> = [#if debug 'test', #end'Stage Select', 'Settings', 'Credits', 'Exit'];
 	var options:Array<String> = ['Controls', 'Graphics', 'Visuals', 'Gameplay'];
     var curDifficulty:Int = -1;
     var curSelected:Int = 0;
@@ -40,9 +45,57 @@ class Menu extends MusicBeatState{
 	var cardGroup:FlxSpriteGroup;
 	var txtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
 	var selected = new FlxSprite();
-   	override public function create(){
+	private static var curCredit:Int = 0;
+    private var camGame:FlxCamera;
+    private var camText:FlxCamera;
+    private var camDesc:FlxCamera;
+	var camFollow:FlxObject;
+	var credTxtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
+	var curCredSelect = new FlxSprite();
+    var bg = new FlxSprite();
+    var descBox = new FlxSprite();
+    var descTxt = new FlxText();
+    var descJob = new FlxText();
+	var mousey:Float = 0;
+	var ogTexty:Float = 0;
+	var wheely:Float = 0;
+	var isdrag:Bool = false;
+	var freePlay:Bool = false;
+	var settings:Bool = false;
+	var credits:Bool = false;
+	var __songs:SongList;
+	var __credits:CreditDef;
+	function init(){
+		__credits = Json.parse(getText('assets/archive/data/credits.json'));
+		for(i in __credits.credits)
+			creditsStuff.push(i);
+
+		__songs = Json.parse(getText('assets/archive/data/songList.json'));
+		for(i in __songs.songs)
+			songs.push(i);
+
+		camGame = new FlxCamera();
+
+		camText = new FlxCamera();
+		camText.bgColor.alpha = 0;
+
+		camDesc = new FlxCamera();
+		camDesc.bgColor.alpha = 0;
+
+        camFollow = new FlxObject(0, 0, 1, 1);
+	    add(camFollow);
+
+		FlxG.cameras.reset(camGame);
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
+		FlxG.cameras.add(camText, false);
+        FlxG.cameras.add(camDesc, false);
+        camText.follow(camFollow, null, 0.10);
+
 		PlayState.isStoryMode = false;
-		var bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
+	}
+   	override public function create(){
+		init();
+		bg.loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
 		add(bg);
 		bg.screenCenter();
@@ -71,71 +124,101 @@ class Menu extends MusicBeatState{
 		storeGroupY = cardGroup.y;
 		cardGroup.y += 720;
 		add(cardGroup);
-    }
 
-	var mousey:Float = 0;
-	var ogTexty:Float = 0;
-	var wheely:Float = 0;
-	var isdrag:Bool = false;
-	var freePlay:Bool = false;
-	var settings:Bool = false;
+		for(i in 0...creditsStuff.length){
+            var isReal:Bool = !unselectableCheck(i);
+            var options = new FlxText();
+        	options.text = creditsStuff[i][0];
+            if(isReal){
+                options.setFormat(Paths.font('Sonic Advanced 2.ttf'), 40, FlxColor.WHITE);
+        	    options.x = 40;
+            }else{
+                options.setFormat(Paths.font('Sonic Advanced 2.ttf'), 60, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        	    options.screenCenter(X);
+            }
+            options.y = 50 + i * 100;
+            options.camera = camText;
+            credTxtGroup.add(options);
+		}
+        curCredSelect.camera = camText;
+		add(curCredSelect);
+		add(credTxtGroup);
+        
+		descBox.makeGraphic(Std.int(FlxG.width- 30),Std.int(FlxG.height/4) , FlxColor.BLACK);
+		descBox.screenCenter();
+        descBox.y += 210;
+        descBox.alpha = 0.6;
+        descBox.camera = camDesc;
+        add(descBox);
+
+        descJob.setFormat(Paths.font('Sonic Advanced 2.ttf'), 40, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        descJob.y = descBox.y + 1;
+        descJob.x = descBox.x + 6;
+        descJob.camera = camDesc;
+        add(descJob);
+
+        descTxt.setFormat(Paths.font('Sonic Advanced 2.ttf'), 20, FlxColor.WHITE);
+        descTxt.y = descBox.y + descJob.height + 4;
+        descTxt.x = descBox.x + 4;
+        descTxt.camera = camDesc;
+        add(descTxt);
+        
+        changeCredit(1);
+		updateCredits(false);
+    }
     override public function update(elapsed:Float){
 		if(freePlay){
 			if (FlxG.mouse.justPressed){
 				mousey = FlxG.mouse.screenX;
 				ogTexty = cardGroup.x;
 			}
-
 			if(FlxG.mouse.pressed){
 				wheely = ogTexty - (mousey - FlxG.mouse.x);
 				var lerpVal:Float = boundTo(elapsed * 9, 0, 1);
 				cardGroup.x = FlxMath.lerp(cardGroup.x, wheely, lerpVal);
 				isdrag = true;
 			}
-
 			if(isdrag){
 				if(cardGroup.x > (FlxG.width- 30)) cardGroup.x = FlxG.width - 40;
 				else if(cardGroup.x < (-FlxG.width- 30)) cardGroup.x = -FlxG.width - 40;	
 			}
-
 			if(FlxG.mouse.justReleased)isdrag = false;
-			
 			if (controls.BACK) {
 				FlxTween.tween(cardGroup, {y: storeGroupY + 720}, 0.5, {onComplete: function(twn:FlxTween){
 				freePlay = false;
 				isdrag = false;
         		}});
 			}
+			// if (controls.ACCEPT && !isdrag || FlxG.mouse.justPressed && !isdrag){
+			// 	persistentUpdate = false;
+			// 	cardGroup.forEach(function(card:Plate){
+			// 		if(FlxG.mouse.overlaps(card)){
+			// 			var songLowercase:String = Paths.formatToSongPath(card.title);
+			// 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 
-			if (controls.ACCEPT && !isdrag || FlxG.mouse.justPressed && !isdrag){
-				persistentUpdate = false;
-				cardGroup.forEach(function(card:Plate){
-					if(FlxG.mouse.overlaps(card)){
-						var songLowercase:String = Paths.formatToSongPath(card.title);
-						var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+			// 			Song.loadFromJson(poop, songLowercase);
+			// 			PlayState.storyDifficulty = curDifficulty;
 
-						Song.loadFromJson(poop, songLowercase);
-						PlayState.storyDifficulty = curDifficulty;
-
-						LoadingState.prepareToSong();
-						LoadingState.loadAndSwitchState(new PlayState());
-					}
-				});
-			}
-
-			txtGroup.forEach(function(spr:FlxText){
-				spr.alpha = 0.5;
-			});
+			// 			LoadingState.prepareToSong();
+			// 			LoadingState.loadAndSwitchState(new PlayState());
+			// 		}
+			// 	});
+			// }
+			txtGroup.forEach(function(spr:FlxText){spr.alpha = 0.5;});
 		}else if(settings){
 			if(FlxG.keys.justPressed.LEFT ||FlxG.keys.justPressed.RIGHT) changeSub(FlxG.keys.justPressed.LEFT? -1 : 1);
 			if (controls.ACCEPT) openSelectedSubstate(options[curOption]);
-			
 			if (controls.BACK){
 				var curMember:FlxText = txtGroup.members[curSelected];
 				curMember.text = 'Settings';
 				changeOption();
 				settings = false;
 			}
+		}else if(credits){
+			txtGroup.forEach(function(spr:FlxText){spr.alpha = 0.5;});
+            if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN) changeCredit(FlxG.keys.justPressed.UP? -1 : 1);
+            if (controls.BACK) updateCredits(false);
+		    if(controls.ACCEPT && creditsStuff[curCredit][3] != null) CoolUtil.browserLoad(creditsStuff[curCredit][3]);	
 		}else{
         	for (i in 0...select.length){
 				var distItem:Int = -1;
@@ -146,15 +229,9 @@ class Menu extends MusicBeatState{
                 	changeOption();
 				}
 			};
-			txtGroup.forEach(function(spr:FlxText){
-				spr.alpha = 1;
-			});
-
-        	if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN){
-            	changeOption(FlxG.keys.justPressed.UP? -1 : 1);
-        	}
-			
-			if (controls.ACCEPT){
+			txtGroup.forEach(function(spr:FlxText){spr.alpha = 1;});
+        	if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN)changeOption(FlxG.keys.justPressed.UP? -1 : 1);
+			if (controls.ACCEPT || FlxG.mouse.justPressed){
 				switch(select[curSelected]){
 					case 'Stage Select':
 						FlxTween.tween(cardGroup, {y: storeGroupY}, 0.5, {onComplete: function(twn:FlxTween){
@@ -164,13 +241,20 @@ class Menu extends MusicBeatState{
 						changeSub();
 						settings = true;
 					case 'Credits': 
-						MusicBeatState.switchState(new states.snc.Credits());
+						updateCredits(true);
 					case 'Exit': 
 						Sys.exit(0);
+					case 'test':
+						MusicBeatState.switchState(new states.snc.Test());
 				}
 			}
 		}
     }
+	function updateCredits(_i:Bool){
+		camText.visible = _i;
+		camDesc.visible = _i;
+		credits = _i;
+	}
 	function changeSub(?i:Int = 0){
 		curOption = FlxMath.wrap(curOption + i, 0, select.length - 1);
 
@@ -178,7 +262,6 @@ class Menu extends MusicBeatState{
 		curMember.text = 'Settings > ';
 		setText(options[curOption], curMember);
 	}
-
     public function setText(txt:String, txtSpr:FlxText) {
         var toInt:Int = txt.length;
 
@@ -196,7 +279,6 @@ class Menu extends MusicBeatState{
             }
         }, toInt);
     }
-
 	function openSelectedSubstate(label:String) {
 		switch(label){
 			case 'Controls':
@@ -209,7 +291,6 @@ class Menu extends MusicBeatState{
 				openSubState(new states.snc.opt.subs.Gameplay());
 		}
 	}
-
 	function changeOption(?i:Int = 0){
 		curSelected = FlxMath.wrap(curSelected + i, 0, select.length - 1);
 
@@ -218,7 +299,6 @@ class Menu extends MusicBeatState{
 		selected.x = curMember.x + (curMember.width - selected.width) / 2;
         selected.y = curMember.y + (curMember.height - selected.height) / 2;
 	}
-
 	public static function boundTo(value:Float, min:Float, max:Float):Float {
 		var newValue:Float = value;
 		if (newValue < min)
@@ -226,5 +306,64 @@ class Menu extends MusicBeatState{
 		else if (newValue > max)
 			newValue = max;
 		return newValue;
+	}
+	function changeCredit(?i:Int = 0){
+        curCredit = FlxMath.wrap(curCredit + i, 0, creditsStuff.length - 1);
+        if(unselectableCheck(curCredit)){ 
+            curCredit += i;
+            curCredit = FlxMath.wrap(curCredit, 0, creditsStuff.length - 1);
+        }
+
+        setDescJob(creditsStuff[curCredit][1], descJob);
+        setDescTxt(creditsStuff[curCredit][2], descTxt);
+        var curMember:FlxText = credTxtGroup.members[curCredit];
+		curCredSelect.makeGraphic(Std.int(curMember.width + 20),Std.int(curMember.height) , FlxColor.BLACK);
+		curCredSelect.x = curMember.x + (curMember.width - curCredSelect.width) / 2;
+        curCredSelect.y = curMember.y + (curMember.height - curCredSelect.height) / 2;
+
+        camFollow.setPosition(450, curMember.y);
+    }
+	private function unselectableCheck(num:Int):Bool {
+		return creditsStuff[num].length <= 1;
+	}
+    public function setDescJob(txt:String, txtSpr:FlxText) {
+        txtSpr.text = '';
+        var toInt:Int = txt.length;
+        var storeTxt:String = '';
+        var i:Int = 0;
+        new FlxTimer().start(0.01, function(tmr:FlxTimer) {
+            storeTxt += txt.charAt(i);
+            txtSpr.text = storeTxt;
+            i+=1;
+            if (i >= toInt) {
+                tmr.cancel();
+            }
+        }, toInt);
+    }
+    public function setDescTxt(txt:String, txtSpr:FlxText) {
+        if(txt == '')txt = emptyDesc;
+        txtSpr.text = '';
+        var toInt:Int = txt.length;
+        var storeTxt:String = '';
+        var i:Int = 0;
+        new FlxTimer().start(0.01, function(tmr:FlxTimer) {
+            storeTxt += txt.charAt(i);
+            txtSpr.text = storeTxt;
+            i+=1;
+            if (i >= toInt) {
+                tmr.cancel();
+            }
+        }, toInt);
+    }
+	public static function path(path:String){
+		if (!FileSystem.exists(path)){
+			trace('could not find $path');
+			return null;
+        }
+		return path;
+    }
+	inline static public function getText(key:String):String{
+		var path:String = path(key);
+		return (FileSystem.exists(path)) ? File.getContent(path) : null;
 	}
 }

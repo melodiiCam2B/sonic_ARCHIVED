@@ -1,0 +1,35 @@
+{	
+    "credits": [
+        ["Sonic ARCHIVED team"],
+        ["Melodii2b", "Made the Too Fest remix and Coded the mod", "chiptune = bitcrush", "https://www.youtube.com/@melodiilesbien"],
+        ["Kit", "Made the Milk remix and charted the mod", "insert insane midi guitar solo here", "https://www.youtube.com/@kit-017"],
+
+        ["Psych Engine Team"],
+        ["Shadow Mario", "Main Programmer and Head of Psych Engine", "psychtard", "https://ko-fi.com/shadowmario"],
+        ["Riveren", "Main Artist/Animator of Psych Engine", "psych art", "https://x.com/riverennn"],
+
+        ["Former Engine Members"],
+        ["bb-panzu", "Ex-Programmer of Psych Engine", "fnf sex mod", "https://x.com/bbsub3"],
+
+        ["Engine Contributors"],
+        ["crowplexus", "Linux Support, HScript Iris, Input System v3, and Other PRs", "HScript :p", "https://twitter.com/IamMorwen"],
+        ["Kamizeta", "Creator of Pessy, Psych Engine\"s mascot", "Pessy creator", "https://www.instagram.com/cewweey/"],
+        ["MaxNeton", "Loading Screen Easter Egg Artist/Animator", "Pessy Loading Animation", "https://bsky.app/profile/maxneton.bsky.social"],
+        ["Keoiki", "Note Splash Animations and Latin Alphabet", "A, B, C, D, E, F, G-", "https://x.com/Keoiki_"],
+        ["SqirraRNG", "Chart Editor's Waveform", "waving form", "https://x.com/gedehari"],
+        ["EliteMasterEric", "Runtime Shaders support and Other PRs", "that one dude that works on funkin now", "https://x.com/EliteMasterEric"],
+        ["MAJigsaw77", ".MP4 Video Loader Library (hxvlc)", "Videos", "https://x.com/MAJigsaw77"],
+        ["iFlicky", "Composer of Psync and Tea Time and some sound effects", "Pause music", "https://x.com/flicky_i"],
+        ["KadeDev", "Fixed some issues on Chart Editor and Other PRs", "outdated engine motherfucker","https://x.com/kade0912"],
+        ["superpowers04", "LUA JIT Fork", "Lua","https://x.com/superpowers04"],
+        ["CheemsAndFriends", "Creator of FlxAnimate", "FlxAnimate","https://x.com/CheemsnFriendos"],
+
+        ["Funkin' Crew"],
+        ["ninjamuffin99", "Programmer of Friday Night Funkin'", "newgrounds resident","https://x.com/ninja_muffin99"],
+        ["PhantomArcade", "Animator of Friday Night Funkin'", "newgrounds resident","https://x.com/PhantomArcade3K"],
+        ["evilsk8r", "Artist of Friday Night Funkin'", "newgrounds resident","https://x.com/evilsk8r"],
+        ["kawaisprite", "Composer of Friday Night Funkin'", "newgrounds resident","https://x.com/kawaisprite"]
+    ]
+ 
+    
+}

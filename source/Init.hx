@@ -69,7 +69,7 @@ class Init extends MusicBeatState
 		if(FlxG.save.data.seenWarning == null)
 			openSubState(new substates.WarningSubState());
 		else
-			MusicBeatState.switchState(new states.snc.Menu());
+			FlxG.switchState(new states.snc.Menu());
 		
 	}
 
@@ -92,7 +92,7 @@ class Init extends MusicBeatState
 	override function update(elapsed:Float){
 		if (FlxG.sound.music != null)Conductor.songPosition = FlxG.sound.music.time;
 
-		if (FlxG.keys.justPressed.ENTER)MusicBeatState.switchState(new states.snc.Menu());
+		if (FlxG.keys.justPressed.ENTER) FlxG.switchState(new states.snc.Menu());
 
 		super.update(elapsed);
 	}

@@ -45,6 +45,7 @@ class Crash extends FlxState
 		report.borderSize = 1.5;
 		report.scrollFactor.set(0, 0);
 		add(report);
+		trace(report.text);
 	}
 
 	override function update(elapsed:Float){

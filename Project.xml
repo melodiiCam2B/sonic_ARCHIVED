@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app 	title="Sonic - ARCHIVED" 
+	<app 	title="Sonic ARCHIVED" 
 			file="Sonic" 
 			packageName="melodii.cam.2b" 
 			package="melodii.cam.2b" 
@@ -70,9 +70,9 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="_/debug"/>
-	<set name="BUILD_DIR" value="_/64bit" unless="build" />
-	<set name="BUILD_DIR" value="_/32bit" if="32bits" />
+	<set name="BUILD_DIR" value=".b/debug" if="debug" />
+	<set name="BUILD_DIR" value=".b/64bit" unless="debug" />
+	<set name="BUILD_DIR" value=".b/32bit" if="32bits" />
 	<classpath name="source" />
 
 	<!-- __________________________ Game Assets & Etc. __________________________ -->

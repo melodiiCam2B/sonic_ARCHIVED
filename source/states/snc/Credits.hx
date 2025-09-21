@@ -3,7 +3,7 @@ import utils.Path;
 import flixel.addons.display.FlxBackdrop;
 import states.snc.obj.*;
 class Credits extends MusicBeatState{
-	private static var curSelected:Int = 0;
+	private static var curCredit:Int = 0;
 	var creditsStuff:Array<Array<String>> = [
     //  ['name', 'what they did', 'extra stuff', 'social link']
         ['Sonic ARCHIVED team'],
@@ -40,8 +40,8 @@ class Credits extends MusicBeatState{
     private var camText:FlxCamera;
     private var camDesc:FlxCamera;
 	var camFollow:FlxObject;
-	var txtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
-	var selected = new FlxSprite();
+	var credTxtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
+	var curCredSelect = new FlxSprite();
     var bg = new FlxSprite();
 
     var descBox = new FlxSprite();
@@ -84,11 +84,11 @@ class Credits extends MusicBeatState{
             }
             options.y = 50 + i * 100;
             options.camera = camText;
-            txtGroup.add(options);
+            credTxtGroup.add(options);
 		}
-        selected.camera = camText;
-		add(selected);
-		add(txtGroup);
+        curCredSelect.camera = camText;
+		add(curCredSelect);
+		add(credTxtGroup);
         
 		descBox.makeGraphic(Std.int(FlxG.width- 30),Std.int(FlxG.height/4) , FlxColor.BLACK);
 		descBox.screenCenter();
@@ -109,26 +109,28 @@ class Credits extends MusicBeatState{
         descTxt.camera = camDesc;
         add(descTxt);
         
-        changeOption(1);
+        changeCredit(1);
 	}
     override public function update(elapsed:Float){
-        if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN) changeOption(FlxG.keys.justPressed.UP? -1 : 1);
-        if (controls.BACK) MusicBeatState.switchState(new states.snc.Menu());
-		if(controls.ACCEPT && creditsStuff[curSelected][3] != null) CoolUtil.browserLoad(creditsStuff[curSelected][3]);
+        if(credits){
+            if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN) changeCredit(FlxG.keys.justPressed.UP? -1 : 1);
+            if (controls.BACK) MusicBeatState.switchState(new states.snc.Menu());
+		    if(controls.ACCEPT && creditsStuff[curCredit][3] != null) CoolUtil.browserLoad(creditsStuff[curCredit][3]);
+        }
     }
-	function changeOption(?i:Int = 0){
-        curSelected = FlxMath.wrap(curSelected + i, 0, creditsStuff.length - 1);
-        if(unselectableCheck(curSelected)){ 
-            curSelected += i;
-            curSelected = FlxMath.wrap(curSelected, 0, creditsStuff.length - 1);
+	function changeCredit(?i:Int = 0){
+        curCredit = FlxMath.wrap(curCredit + i, 0, creditsStuff.length - 1);
+        if(unselectableCheck(curCredit)){ 
+            curCredit += i;
+            curCredit = FlxMath.wrap(curCredit, 0, creditsStuff.length - 1);
         }
 
-        setDescJob(creditsStuff[curSelected][1], descJob);
-        setDescTxt(creditsStuff[curSelected][2], descTxt);
-        var curMember:FlxText = txtGroup.members[curSelected];
-		selected.makeGraphic(Std.int(curMember.width + 20),Std.int(curMember.height) , FlxColor.BLACK);
-		selected.x = curMember.x + (curMember.width - selected.width) / 2;
-        selected.y = curMember.y + (curMember.height - selected.height) / 2;
+        setDescJob(creditsStuff[curCredit][1], descJob);
+        setDescTxt(creditsStuff[curCredit][2], descTxt);
+        var curMember:FlxText = credTxtGroup.members[curCredit];
+		curCredSelect.makeGraphic(Std.int(curMember.width + 20),Std.int(curMember.height) , FlxColor.BLACK);
+		curCredSelect.x = curMember.x + (curMember.width - curCredSelect.width) / 2;
+        curCredSelect.y = curMember.y + (curMember.height - curCredSelect.height) / 2;
 
         camFollow.setPosition(400, curMember.y);
     }
