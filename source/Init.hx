@@ -36,14 +36,34 @@ import psychlua.*;
 import psychlua.hscript_new.*;
 import states.editors.MasterEditorMenu;
 
-class Init extends MusicBeatState
-{
+class Init extends MusicBeatState{
+	public static var move = false;
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
+	var bot = new FlxSprite();
+    var top = new FlxSprite();
 	override public function create():Void{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+		
+        top.loadGraphic(Paths.image('TRANSIT', 'archive'));
+		top.setGraphicSize(FlxG.width, FlxG.height/2);
+		top.updateHitbox();
+		top.scrollFactor.set();
+		top.screenCenter(X);
+		bot.flipX = true;
+		top.y = 0;
+		add(top);
+
+        bot.loadGraphic(Paths.image('TRANSIT', 'archive'));
+		bot.setGraphicSize(FlxG.width, FlxG.height/2);
+		bot.updateHitbox();
+		bot.scrollFactor.set();
+		bot.screenCenter(X);
+        bot.flipY = true;
+        bot.y = FlxG.height/2;
+        add(bot);
 
 		if (FlxG.sound.music == null)FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 
@@ -51,12 +71,8 @@ class Init extends MusicBeatState
 		Language.reloadPhrases();
 
 		if(FlxG.save.data != null && FlxG.save.data.fullscreen)FlxG.fullscreen = FlxG.save.data.fullscreen;
-		
 		persistentUpdate = true;
 		persistentDraw = true;
-		
-		if (FlxG.save.data.weekCompleted != null)StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
 
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/Global.hx')){
 			for (file in FileSystem.readDirectory(folder)){
@@ -65,12 +81,9 @@ class Init extends MusicBeatState
 		}
 
 		//below system would be changed
-
 		if(FlxG.save.data.seenWarning == null)
 			openSubState(new substates.WarningSubState());
-		else
-			FlxG.switchState(new states.snc.Menu());
-		
+		else nextState();
 	}
 
 	public function initGlobal(file:String){
@@ -88,11 +101,13 @@ class Init extends MusicBeatState
 				newScript.destroy();
 		}
 	}
-
+	public static function nextState(){
+		MusicBeatState.switchState(new states.snc.Menu());
+	}
 	override function update(elapsed:Float){
 		if (FlxG.sound.music != null)Conductor.songPosition = FlxG.sound.music.time;
 
-		if (FlxG.keys.justPressed.ENTER) FlxG.switchState(new states.snc.Menu());
+		if (move) nextState();
 
 		super.update(elapsed);
 	}

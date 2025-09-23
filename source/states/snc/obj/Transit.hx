@@ -7,7 +7,7 @@ class Transit extends MusicBeatSubstate{
     private var isTransIn:Bool;
     private var duration:Float;       
     public static var nextCamera:FlxCamera;
-    public function new(duration:Float, isTransIn:Bool, nextState:FlxState) {
+    public function new(duration:Float, isTransIn:Bool) {
         super();
         this.duration = duration;
         this.isTransIn = isTransIn;
@@ -17,6 +17,7 @@ class Transit extends MusicBeatSubstate{
 		top.updateHitbox();
 		top.scrollFactor.set();
 		top.screenCenter(X);
+		bot.flipX = true;
 
         bot.loadGraphic(Paths.image('TRANSIT', 'archive'));
 		bot.setGraphicSize(FlxG.width, FlxG.height/2);
@@ -25,12 +26,18 @@ class Transit extends MusicBeatSubstate{
 		bot.screenCenter(X);
         bot.flipY = true;
 
+        if(isTransIn){
+            top.y = -FlxG.height/2;
+            bot.y = FlxG.height;
+        }else{     
+            top.y = 0;
+            bot.y = FlxG.height/2;
+        }
+        
         add(top);
         add(bot);
 
         if(isTransIn){
-            top.y -= FlxG.height/2;
-            bot.y += FlxG.height;
 			FlxTween.tween(top,{y: 0},duration,{ease: FlxEase.circInOut});
 			FlxTween.tween(bot,{y: FlxG.height/2},duration,{ease: FlxEase.circInOut,onComplete:
 				function(t:FlxTween) {
@@ -38,14 +45,11 @@ class Transit extends MusicBeatSubstate{
                         if(finishCallback != null){
                             finishCallback();
                             finishCallback = null;
-                            MusicBeatState.finishTransition();
                         }
                     });
 				}
 			});
         }else{     
-            top.y -= 0;
-            bot.y += FlxG.height/2;
 			FlxTween.tween(top,{x: -FlxG.width},duration,{ease: FlxEase.circInOut});
 			FlxTween.tween(bot,{x: FlxG.width},duration,{ease: FlxEase.circInOut,onComplete:
 				function(t:FlxTween) {

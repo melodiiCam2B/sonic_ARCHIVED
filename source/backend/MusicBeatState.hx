@@ -36,13 +36,6 @@ class MusicBeatState extends FlxState
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
 	}
-	public function new() {
-		super();
-        new FlxTimer().start(2, function(tmr:FlxTimer) {
-            FlxG.state.openSubState(new Transit(0.5, false));
-        });
-	}
-
 	public function initPsychCamera():PsychCamera
 	{
 		var camera = new PsychCamera();
@@ -153,17 +146,14 @@ class MusicBeatState extends FlxState
 	{
 		if(nextState == null)
 			nextState = FlxG.state;
-
 		FlxG.state.openSubState(new Transit(0.5, true));
 		if(nextState == FlxG.state)
 			Transit.finishCallback = function() FlxG.resetState();
 		else
 			Transit.finishCallback = function() FlxG.switchState(nextState);
 	}
-	public static function finishTransition(nextState:FlxState = null){
-        new FlxTimer().start(2, function(tmr:FlxTimer) {
+	function finishTransition():Void{
             FlxG.state.openSubState(new Transit(0.5, false));
-        });
 	}
 
 	public static function getState():MusicBeatState {

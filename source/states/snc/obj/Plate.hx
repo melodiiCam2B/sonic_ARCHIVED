@@ -10,20 +10,20 @@ class Plate extends FlxSpriteGroup {
     var desc = new FlxText();
     var cred = new FlxText();
 
-    public var title:String;
-    public var credits:String;
-    public var portrait:String;
+    public var title:String = 'Place Holder';
+    public var credits:String = 'not added yet';
+    public var portrait:String = 'port_temp';
 
     public function new(?title:String = 'Place Holder', ?credits:String = 'not added yet',?portrait:String = 'port_temp') {
         this.title = title;
         this.credits = credits;
-        this.portrait = portrait;
+        if(fileCheck(portrait)) this.portrait = portrait;
         super();
         __create();
     }
-
+    function fileCheck(path:String)return FileSystem.exists('assets/archive/images/cards/$path.png');
     function __create(){
-        body.loadGraphic(Paths.image('cards/back_temp', 'archive'));
+        body.loadGraphic(Paths.image('BACK', 'archive'));
         body.setGraphicSize(1280/5, 720/2*1.2);
         body.updateHitbox();
         add(body);

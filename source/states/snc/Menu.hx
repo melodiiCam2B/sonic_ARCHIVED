@@ -94,6 +94,7 @@ class Menu extends MusicBeatState{
 		PlayState.isStoryMode = false;
 	}
    	override public function create(){
+		finishTransition();
 		init();
 		bg.loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
@@ -116,7 +117,7 @@ class Menu extends MusicBeatState{
 
 		cardGroup = new FlxSpriteGroup();
 		for(i in 0...songs.length){
-			var newCard = new Plate(songs[i][0],songs[i][1]/**,songs[i][2]**/);
+			var newCard = new Plate(songs[i][0],songs[i][1],songs[i][2]);
 			newCard.x += i * 380;
 			cardGroup.add(newCard);
 		}
@@ -163,7 +164,7 @@ class Menu extends MusicBeatState{
         descTxt.camera = camDesc;
         add(descTxt);
         
-        changeCredit(1);
+        changeCredit();
 		updateCredits(false);
     }
     override public function update(elapsed:Float){

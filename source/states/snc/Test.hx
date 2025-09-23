@@ -1,7 +1,8 @@
 package states.snc;
-
+import states.snc.obj.*;
 class Test extends MusicBeatState{
    	override public function create(){
+        finishTransition();
         var bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
 		add(bg);
@@ -12,6 +13,7 @@ class Test extends MusicBeatState{
         descJob.text = 'this is here for testing\nif you see this state... um\n\noopsies?';
         descJob.screenCenter();
         add(descJob);
+
     }
     override public function update(elapsed:Float){
         if (controls.BACK) MusicBeatState.switchState(new states.snc.Menu());
