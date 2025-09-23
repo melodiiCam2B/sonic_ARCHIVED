@@ -33,6 +33,7 @@ typedef CreditDef = {
   	var credits:Array<Array<String>>;
 }
 class Menu extends MusicBeatState{
+	public static var menuMusic:String = 'kamiOni';
 	var creditsStuff:Array<Array<String>> = [];
     var emptyDesc:String = ':< wompity womp womp >:\n(this means there\'s nothing there)';
     var songs:Array<Array<String>> = [];
@@ -42,7 +43,7 @@ class Menu extends MusicBeatState{
     var curSelected:Int = 0;
    	var curOption:Int = 0;
 	var storeGroupY:Float = -1;
-	var cardGroup:FlxSpriteGroup;
+	var cardGroup:FlxTypedSpriteGroup<Plate>;
 	var txtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
 	var selected = new FlxSprite();
 	private static var curCredit:Int = 0;
@@ -65,6 +66,9 @@ class Menu extends MusicBeatState{
 	var credits:Bool = false;
 	var __songs:SongList;
 	var __credits:CreditDef;
+	var missingTextBG:FlxSprite;
+	var missingText:FlxText;
+	public static function startMusic() FlxG.sound.playMusic(Paths.music(menuMusic));
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
 		for(i in __credits.credits)
@@ -115,7 +119,7 @@ class Menu extends MusicBeatState{
 		add(selected);
 		add(txtGroup);
 
-		cardGroup = new FlxSpriteGroup();
+		cardGroup = new FlxTypedSpriteGroup<Plate>();
 		for(i in 0...songs.length){
 			var newCard = new Plate(songs[i][0],songs[i][1],songs[i][2]);
 			newCard.x += i * 380;
@@ -166,6 +170,17 @@ class Menu extends MusicBeatState{
         
         changeCredit();
 		updateCredits(false);
+
+		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		missingTextBG.alpha = 0.6;
+		missingTextBG.visible = false;
+		add(missingTextBG);
+		
+		missingText = new FlxText(50, 0, FlxG.width, '', 24);
+		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		missingText.scrollFactor.set();
+		missingText.visible = false;
+		add(missingText);
     }
     override public function update(elapsed:Float){
 		if(freePlay){
@@ -190,21 +205,41 @@ class Menu extends MusicBeatState{
 				isdrag = false;
         		}});
 			}
-			// if (controls.ACCEPT && !isdrag || FlxG.mouse.justPressed && !isdrag){
-			// 	persistentUpdate = false;
-			// 	cardGroup.forEach(function(card:Plate){
-			// 		if(FlxG.mouse.overlaps(card)){
-			// 			var songLowercase:String = Paths.formatToSongPath(card.title);
-			// 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+        	for (i in 0...cardGroup.members.length){
+				var memb:Plate = cardGroup.members[i];
+   		    	if(FlxG.mouse.overlaps(memb)){
+					if(FlxG.mouse.justPressed){
+						var songLowercase:String = Paths.formatToSongPath(memb.title);
+						var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+						trace(poop);
+						Song.loadFromJson(poop, songLowercase);
+						PlayState.storyDifficulty = curDifficulty;
 
-			// 			Song.loadFromJson(poop, songLowercase);
-			// 			PlayState.storyDifficulty = curDifficulty;
+						try{
+							Song.loadFromJson(poop, songLowercase);
+							PlayState.isStoryMode = false;
+							PlayState.storyDifficulty = curDifficulty;
+						}catch(e:haxe.Exception){
+							trace('ERROR! ${e.message}');
 
-			// 			LoadingState.prepareToSong();
-			// 			LoadingState.loadAndSwitchState(new PlayState());
-			// 		}
-			// 	});
-			// }
+							var errorStr:String = e.message;
+							if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length-1); //Missing chart
+							else errorStr += '\n\n' + e.stack;
+
+							missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
+							missingText.screenCenter(Y);
+							missingText.visible = true;
+							missingTextBG.visible = true;
+
+							super.update(elapsed);
+							
+							return;
+						}
+						LoadingState.prepareToSong();
+						LoadingState.loadAndSwitchState(new PlayState());
+					}
+				}
+			};
 			txtGroup.forEach(function(spr:FlxText){spr.alpha = 0.5;});
 		}else if(settings){
 			if(FlxG.keys.justPressed.LEFT ||FlxG.keys.justPressed.RIGHT) changeSub(FlxG.keys.justPressed.LEFT? -1 : 1);
@@ -255,6 +290,13 @@ class Menu extends MusicBeatState{
 		camText.visible = _i;
 		camDesc.visible = _i;
 		credits = _i;
+	}
+	function setBack(){
+		new FlxTimer().start(0.04, function(tmr:FlxTimer) {
+  			missingText.visible = false;
+			missingTextBG.visible = false;
+			missingText.text = '';
+        });
 	}
 	function changeSub(?i:Int = 0){
 		curOption = FlxMath.wrap(curOption + i, 0, select.length - 1);

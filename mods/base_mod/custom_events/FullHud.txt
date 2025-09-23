@@ -1,2 +1,0 @@
-value 1 alpha
-value 2 duration

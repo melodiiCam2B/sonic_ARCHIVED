@@ -1,2 +1,0 @@
-value1: zoom amount
-value2: zoom time

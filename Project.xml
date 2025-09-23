@@ -12,10 +12,10 @@
 	/>
 
 
-	<icon path="icolol.png" size='16'/>
-	<icon path="icolol.png" size='32'/>
-	<icon path="icolol.png" size='64'/>
-	<icon path="icolol.png" />
+	<icon path="sa.png" size='16'/>
+	<icon path="sa.png" size='32'/>
+	<icon path="sa.png" size='64'/>
+	<icon path="sa.png" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="1266759928073162832" />
@@ -78,7 +78,7 @@
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 	<define name="CRASH_HANDLER" if="desktop release" />
 
-	<assets path="assets" />
+	<assets path="assets" embed="true"/>
 	<assets path="assets/fonts" />
 	<assets path="assets/system" />
 	<assets path="assets/shared"        exclude="*.ogg" if="web"/>
@@ -95,7 +95,7 @@
 
 	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild"/>
 
-	<assets path='mods'/>
+	<assets path='mods' embed="true"/>
 	<assets path='list.txt' rename='modsList.txt' />
 
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="angryHD.png">
-<SubTexture name="angryHD idle0000" x="708" y="0" width="361" height="512" frameX="-56" frameY="-38" frameWidth="450" frameHeight="550" />
-<SubTexture name="angryHD left0000" x="348" y="0" width="360" height="513" frameX="-30" frameY="-37" frameWidth="450" frameHeight="550" />
-<SubTexture name="angryHD right0000" x="0" y="530" width="359" height="508" frameX="-64" frameY="-42" frameWidth="450" frameHeight="550" />
-<SubTexture name="angryHD up0000" x="0" y="0" width="348" height="530" frameX="-56" frameY="-20" frameWidth="450" frameHeight="550" />
-<SubTexture name="angryHD down0000" x="359" y="530" width="374" height="477" frameX="-48" frameY="-73" frameWidth="450" frameHeight="550" />
-</TextureAtlas>

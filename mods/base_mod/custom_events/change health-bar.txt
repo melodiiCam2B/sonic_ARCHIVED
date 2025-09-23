@@ -1,7 +1,0 @@
-value 1: healthbar name!
-can be your own custom healthbar or a pre-existing one!
-ignore value 2 if the chosen healthbar exists (check folder)
-
-value 2: size, x position (can be null), y position 
-format: 1, null, 650
-editional: visible icons, add an image under the healthbar, healthbar colors, bar visible

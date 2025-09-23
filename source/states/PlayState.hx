@@ -2503,8 +2503,8 @@ class PlayState extends MusicBeatState
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 				canResync = false;
-				MusicBeatState.switchState(new FreeplayState());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				MusicBeatState.switchState(new states.snc.Menu());
+				states.snc.Menu.startMusic();
 				changedDifficulty = false;
 			}
 			transitioning = true;
