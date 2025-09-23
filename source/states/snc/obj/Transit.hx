@@ -7,7 +7,11 @@ class Transit extends MusicBeatSubstate{
     private var isTransIn:Bool;
     private var duration:Float;       
     public static var nextCamera:FlxCamera;
+    private var transCam:FlxCamera;
     public function new(duration:Float, isTransIn:Bool) {
+		transCam = new FlxCamera();
+		transCam.bgColor.alpha = 0;
+		FlxG.cameras.add(transCam, false);
         super();
         this.duration = duration;
         this.isTransIn = isTransIn;
@@ -17,7 +21,8 @@ class Transit extends MusicBeatSubstate{
 		top.updateHitbox();
 		top.scrollFactor.set();
 		top.screenCenter(X);
-		bot.flipX = true;
+		top.flipX = true;
+        // top.camera = transCam;
 
         bot.loadGraphic(Paths.image('TRANSIT', 'archive'));
 		bot.setGraphicSize(FlxG.width, FlxG.height/2);
@@ -25,6 +30,7 @@ class Transit extends MusicBeatSubstate{
 		bot.scrollFactor.set();
 		bot.screenCenter(X);
         bot.flipY = true;
+        // bot.camera = transCam;
 
         if(isTransIn){
             top.y = -FlxG.height/2;

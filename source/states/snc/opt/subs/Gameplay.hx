@@ -2,10 +2,17 @@ package states.snc.opt.subs;
 import states.snc.obj.*;
 class Gameplay extends OptBase
 {
-	public function new()
-	{
-		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
-		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
+	public function new(){
+		var option:OptOpt = new OptOpt('PC Info', //Name
+			'If checked, allows the game to show info from your PC', //Description
+			'pcINFO', //Save data variable name
+			BOOL); //Variable type
+		addOption(option);
+		var option:OptOpt = new OptOpt('PC Mechanics', //Name
+			'If checked, allows the game mess with your PC', //Description
+			'pcFuckery', //Save data variable name
+			BOOL); //Variable type
+		addOption(option);
 
 		//I'd suggest using "Downscroll" as an example for making your own option since it is the simplest here
 		var option:OptOpt = new OptOpt('Downscroll', //Name

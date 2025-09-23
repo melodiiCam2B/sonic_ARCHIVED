@@ -55,6 +55,8 @@ import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
 
+import states.snc.obj.*;
+
 /**
  * This is where all the Gameplay stuff happens and is managed
  *
@@ -277,6 +279,9 @@ class PlayState extends MusicBeatState
 			Paths.clearUnusedMemory();
 			Language.reloadPhrases();
 		}
+
+		finishTransition();
+
 		nextReloadAll = false;
 
 		startCallback = startCountdown;
@@ -1933,7 +1938,7 @@ class PlayState extends MusicBeatState
 					note.resetAnim = 0;
 				}
 		}
-		openSubState(new PauseSubState());
+		openSubState(new Pause());
 
 		#if DISCORD_ALLOWED
 		if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());

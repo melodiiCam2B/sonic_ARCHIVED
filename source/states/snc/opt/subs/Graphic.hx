@@ -5,9 +5,6 @@ import states.snc.obj.*;
 class Graphic extends OptBase{
 
 	public function new(){
-		title = Language.getPhrase('graphics_menu', 'Graphics Settings');
-		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
-
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
 		var option:OptOpt = new OptOpt('Low Quality', //Name
 			'If checked, disables some background details,\ndecreases loading times and improves performance.', //Description

@@ -1,6 +1,12 @@
 package states.snc.obj;
 
 class Mouse {
+    /**
+     * [TODO]
+     * @param loading - during transitions initiate throbber
+     * @param blocked - when holding right or/and left down denie any other interactions
+     * @param cliking - when holding right or/and left down chnage sprite for visual indication
+     */
     var mouse = FlxSprite();
     var proxy = FlxG.mouse;
     var hoverGroup:FlxSpriteGroup;

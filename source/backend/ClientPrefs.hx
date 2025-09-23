@@ -80,6 +80,8 @@ import states.TitleState;
 
 	public var seenWarning:Bool = false;
 
+	public var pcINFO:Bool = true;
+	public var pcFuckery:Bool = true;
 	public var showDBG:Bool = false;
 	public var showGIT:Bool = false;
 	public var showSCP:Bool = false;

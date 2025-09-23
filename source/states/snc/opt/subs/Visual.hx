@@ -13,9 +13,6 @@ class Visual extends OptBase
 	var noteY:Float = 90;
 	public function new()
 	{
-		title = Language.getPhrase('visuals_menu', 'Visuals Settings');
-		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
-
 		var option:OptOpt = new OptOpt('Hide HUD',
 			'If checked, hides most HUD elements.',
 			'hideHud',

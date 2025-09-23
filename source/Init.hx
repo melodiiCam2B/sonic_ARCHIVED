@@ -52,7 +52,7 @@ class Init extends MusicBeatState{
 		top.updateHitbox();
 		top.scrollFactor.set();
 		top.screenCenter(X);
-		bot.flipX = true;
+		top.flipX = true;
 		top.y = 0;
 		add(top);
 

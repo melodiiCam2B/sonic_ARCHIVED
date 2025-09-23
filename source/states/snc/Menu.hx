@@ -68,7 +68,9 @@ class Menu extends MusicBeatState{
 	var __credits:CreditDef;
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
-	public static function startMusic() FlxG.sound.playMusic(Paths.music(menuMusic));
+	public static function startMusic(){ 
+		// FlxG.sound.playMusic(Paths.music(menuMusic));
+	}
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
 		for(i in __credits.credits)
@@ -235,8 +237,11 @@ class Menu extends MusicBeatState{
 							
 							return;
 						}
-						LoadingState.prepareToSong();
-						LoadingState.loadAndSwitchState(new PlayState());
+						if(FlxG.mouse.justPressed){
+							LoadingState.prepareToSong();
+							LoadingState.loadAndSwitchState(new PlayState());
+						}
+						
 					}
 				}
 			};
