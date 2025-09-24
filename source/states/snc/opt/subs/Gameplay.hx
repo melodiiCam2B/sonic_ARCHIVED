@@ -9,7 +9,7 @@ class Gameplay extends OptBase
 			BOOL); //Variable type
 		addOption(option);
 		var option:OptOpt = new OptOpt('PC Mechanics', //Name
-			'If checked, allows the game mess with your PC', //Description
+			'If checked, allows the game to mess with your PC', //Description
 			'pcFuckery', //Save data variable name
 			BOOL); //Variable type
 		addOption(option);
@@ -21,7 +21,7 @@ class Gameplay extends OptBase
 			BOOL); //Variable type
 		addOption(option);
 
-		var option:OptOpt = new OptOpt('Ghost TOptOptOptOptapping',
+		var option:OptOpt = new OptOpt('Ghost tapping',
 			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
 			'ghostTapping',
 			BOOL);

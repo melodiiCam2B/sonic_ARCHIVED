@@ -9,9 +9,7 @@ class Transit extends MusicBeatSubstate{
     public static var nextCamera:FlxCamera;
     private var transCam:FlxCamera;
     public function new(duration:Float, isTransIn:Bool) {
-		transCam = new FlxCamera();
-		transCam.bgColor.alpha = 0;
-		FlxG.cameras.add(transCam, false);
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
         super();
         this.duration = duration;
         this.isTransIn = isTransIn;
@@ -63,11 +61,5 @@ class Transit extends MusicBeatSubstate{
 				}
 			});
         }
-
-        if (nextCamera != null) {
-            top.cameras = [nextCamera];
-            bot.cameras = [nextCamera];
-        }
-        nextCamera = null;
     }
 }

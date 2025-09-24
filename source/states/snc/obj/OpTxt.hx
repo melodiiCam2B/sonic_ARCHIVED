@@ -13,7 +13,7 @@ class OpTxt extends FlxText {
 	public var changeY:Bool = true;
 
 	public var distancePerItem:FlxPoint = new FlxPoint(20, 60);
-	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
+	public var startPosition:FlxPoint = new FlxPoint(0, 120); //for the calculations
 
 	public var scaleX:Float = 1;
 	public var scaleY:Float = 1;

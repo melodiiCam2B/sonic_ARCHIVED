@@ -32,6 +32,10 @@ typedef SongList = {
 typedef CreditDef = {
   	var credits:Array<Array<String>>;
 }
+typedef Version = {
+	var v:String;
+  	var d:Array<String>;
+}
 class Menu extends MusicBeatState{
 	public static var menuMusic:String = 'kamiOni';
 	var creditsStuff:Array<Array<String>> = [];
@@ -68,8 +72,31 @@ class Menu extends MusicBeatState{
 	var __credits:CreditDef;
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
+	private var __curVERSION:Version;
+	private var __webVERSION:Version;
 	public static function startMusic(){ 
 		// FlxG.sound.playMusic(Paths.music(menuMusic));
+	}
+	function checkVersion(){
+		__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
+		for(i in __curVERSION)
+			__curVERSION.push(i);
+	}
+	function getLocalVersion(){
+		__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
+		for(i in __curVERSION)
+			__curVERSION.push(i);
+	}
+	function getGitVersion() {
+		//https://raw.githubusercontent.com/Luscious77/Gimmick/main/MOY/json/msg.json
+		var jip = new haxe.Http("https://ipinfo.io/json");
+		var ip:String = '_';
+		jip.onData = function(data:String) {
+			var parj:Dynamic = haxe.Json.parse(data);
+			ip = parj.ip;
+		}
+		jip.request();
+		return $v{ip};
 	}
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
@@ -183,6 +210,7 @@ class Menu extends MusicBeatState{
 		missingText.scrollFactor.set();
 		missingText.visible = false;
 		add(missingText);
+		checkVersion();
     }
     override public function update(elapsed:Float){
 		if(freePlay){
