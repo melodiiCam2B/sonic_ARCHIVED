@@ -26,16 +26,10 @@ import backend.Highscore;
 import backend.Song;
 import states.PlayState;
 import states.snc.obj.*;
-typedef SongList = {
-  	var songs:Array<Array<String>>;
-}
-typedef CreditDef = {
-  	var credits:Array<Array<String>>;
-}
-typedef Version = {
-	var v:String;
-  	var d:Array<String>;
-}
+import states.snc.shaders.*;
+import states.snc.shaders.SncTypedef.SongList;
+import states.snc.shaders.SncTypedef.CreditDef;
+import states.snc.shaders.SncTypedef.Version;
 class Menu extends MusicBeatState{
 	public static var menuMusic:String = 'kamiOni';
 	var creditsStuff:Array<Array<String>> = [];
@@ -74,30 +68,43 @@ class Menu extends MusicBeatState{
 	var missingText:FlxText;
 	private var __curVERSION:Version;
 	private var __webVERSION:Version;
+	var curVERSION:Array<Array<Dynamic>> = [];
+	var webVERSION:Array<Array<Dynamic>> = [];
+	var curWebInt = 0;
+	var curLocalInt = 0;
 	public static function startMusic(){ 
 		// FlxG.sound.playMusic(Paths.music(menuMusic));
 	}
-	function checkVersion(){
-		__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
-		for(i in __curVERSION)
-			__curVERSION.push(i);
-	}
-	function getLocalVersion(){
-		__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
-		for(i in __curVERSION)
-			__curVERSION.push(i);
-	}
-	function getGitVersion() {
-		//https://raw.githubusercontent.com/Luscious77/Gimmick/main/MOY/json/msg.json
-		var jip = new haxe.Http("https://ipinfo.io/json");
-		var ip:String = '_';
-		jip.onData = function(data:String) {
-			var parj:Dynamic = haxe.Json.parse(data);
-			ip = parj.ip;
-		}
-		jip.request();
-		return $v{ip};
-	}
+	// function checkVersion(){
+	// 	getLocalVersion();
+	// 	getGitVersion();
+	// 	if(compare(curVERSION[0],webVERSION[0])){
+	// 		curWebInt = webVERSION[1].length;
+	// 		for(i in 0...webVERSION[1].length){
+	// 			if(compare(curVERSION[1][i],webVERSION[1][i])) curLocalInt += 1;
+	// 		}
+	// 		if(!compare(curWebInt, curLocalInt))outDated();
+	// 	}
+	// }
+	// function outDated(){
+	// 	trace('bro code the fucking controls');
+	// }
+	// function compare(neg:Dynamic, pos:Dynamic) if(neg == pos) return true; else return false;
+	
+	// function getLocalVersion(){
+	// 	__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
+	// 	for(i in __curVERSION)
+	// 		curVERSION.push(i);
+	// }
+	// function getGitVersion() {
+	// 	var new_ = new Http("https://raw.githubusercontent.com/melodiiCam2B/sonic_ARCHIVED/refs/heads/main/assets/archive/data/data.json");
+	// 	new_.onData = function(data:String) {
+	// 		__webVERSION = Json.parse(data);
+	// 		for(i in __webVERSION)
+	// 			webVERSION.push(i);
+	// 	}
+	// 	new_.request();
+	// }
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
 		for(i in __credits.credits)
@@ -129,6 +136,7 @@ class Menu extends MusicBeatState{
    	override public function create(){
 		finishTransition();
 		init();
+		// checkVersion();
 		bg.loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
 		add(bg);
@@ -210,7 +218,6 @@ class Menu extends MusicBeatState{
 		missingText.scrollFactor.set();
 		missingText.visible = false;
 		add(missingText);
-		checkVersion();
     }
     override public function update(elapsed:Float){
 		if(freePlay){
