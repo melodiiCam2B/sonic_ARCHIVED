@@ -1,15 +1,21 @@
 package states.snc;
 import states.snc.obj.*;
 import states.snc.shaders.*;
-
+import utils.utilities.*;
+/**
+ * test state for modding :DDD 
+**/
 class Archive extends MusicBeatState{
     var bg = new FlxSprite();
     var pussy:PopUp;
    	override public function create(){
-		bg.loadGraphic(Paths.image('MENU', 'archive'));
-		bg.setGraphicSize(FlxG.width, FlxG.height);
-		add(bg);
-		bg.screenCenter();
+		// bg.loadGraphic(Paths.image('MENU', 'archive'));
+		// bg.setGraphicSize(FlxG.width, FlxG.height);
+		// add(bg);
+		// bg.screenCenter();
+        FlxG.camera.bgColor = 0xFF131313;
+        FlxG.camera.bgColor.alpha = 0;
+        SncTrans.pleasebroplease();
 
         pussy = new PopUp('I\'m waking up','to ash and dust\nI wipe my ass\nand slap my nuts',kills,infi);
         pussy.screenCenter();

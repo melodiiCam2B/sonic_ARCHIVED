@@ -37,6 +37,7 @@ class Info{
 	public static function getAll(){
         return '${getNum()}, ${getHash()}, ${getBranch()}';
     }
+	
     public static function getGit(){
         return 'depricated, use getAll';
     }

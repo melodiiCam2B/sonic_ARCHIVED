@@ -10,6 +10,5 @@ typedef CreditDef = {
   	var credits:Array<Array<String>>;
 }
 typedef Version = {
-	var v:Array<Dynamic>;
-  	var d:Array<Dynamic>;
+	var version:Dynamic;
 }

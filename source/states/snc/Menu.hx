@@ -5,7 +5,6 @@ import openfl.*;
 import haxe.*;
 import sys.*;
 import lime.*;
-
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -15,12 +14,10 @@ import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.addons.display.FlxBackdrop;
 import utils.Path;
-
 import utils.utilities.WinUtils;
-
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
-
+import flixel.addons.display.FlxBackdrop;
 import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
@@ -30,6 +27,8 @@ import states.snc.shaders.*;
 import states.snc.shaders.SncTypedef.SongList;
 import states.snc.shaders.SncTypedef.CreditDef;
 import states.snc.shaders.SncTypedef.Version;
+import openfl.filters.ShaderFilter;
+import openfl.filters.BitmapFilter;
 class Menu extends MusicBeatState{
 	public static var menuMusic:String = 'kamiOni';
 	var creditsStuff:Array<Array<String>> = [];
@@ -46,8 +45,12 @@ class Menu extends MusicBeatState{
 	var selected = new FlxSprite();
 	private static var curCredit:Int = 0;
     private var camGame:FlxCamera;
+    private var camNorm:FlxCamera;
     private var camText:FlxCamera;
     private var camDesc:FlxCamera;
+    private var camErro:FlxCamera;
+	private var cardCam:FlxCamera;
+	var grid:FlxBackdrop;
 	var camFollow:FlxObject;
 	var credTxtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
 	var curCredSelect = new FlxSprite();
@@ -68,43 +71,52 @@ class Menu extends MusicBeatState{
 	var missingText:FlxText;
 	private var __curVERSION:Version;
 	private var __webVERSION:Version;
-	var curVERSION:Array<Array<Dynamic>> = [];
-	var webVERSION:Array<Array<Dynamic>> = [];
+	var curVERSION:Dynamic;
+	var webVERSION:Dynamic;
 	var curWebInt = 0;
 	var curLocalInt = 0;
+	var filters:Array<BitmapFilter> = [];
+	var __fisheye = new FishEye();
+	var windowMsg:PopUp;
 	public static function startMusic(){ 
 		// FlxG.sound.playMusic(Paths.music(menuMusic));
 	}
-	// function checkVersion(){
-	// 	getLocalVersion();
-	// 	getGitVersion();
-	// 	if(compare(curVERSION[0],webVERSION[0])){
-	// 		curWebInt = webVERSION[1].length;
-	// 		for(i in 0...webVERSION[1].length){
-	// 			if(compare(curVERSION[1][i],webVERSION[1][i])) curLocalInt += 1;
-	// 		}
-	// 		if(!compare(curWebInt, curLocalInt))outDated();
-	// 	}
-	// }
-	// function outDated(){
-	// 	trace('bro code the fucking controls');
-	// }
-	// function compare(neg:Dynamic, pos:Dynamic) if(neg == pos) return true; else return false;
-	
-	// function getLocalVersion(){
-	// 	__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
-	// 	for(i in __curVERSION)
-	// 		curVERSION.push(i);
-	// }
-	// function getGitVersion() {
-	// 	var new_ = new Http("https://raw.githubusercontent.com/melodiiCam2B/sonic_ARCHIVED/refs/heads/main/assets/archive/data/data.json");
-	// 	new_.onData = function(data:String) {
-	// 		__webVERSION = Json.parse(data);
-	// 		for(i in __webVERSION)
-	// 			webVERSION.push(i);
-	// 	}
-	// 	new_.request();
-	// }
+	function checkVersion(){
+		getData();
+
+		if(compare(curVERSION,webVERSION)){
+			var newM:String = 'hey!\n
+				your version of sonic ARCHIVED is outdated!\n
+				(your version ${curVERSION}, new version is ${webVERSION})
+				\nPress OK to update, close the popup to ignore!
+			';
+			outDated();
+		}
+	}
+	function outDated(message:String){
+		windowMsg = new PopUp('WARNING!', message, updateIGNORE, updateACCEPT);
+		trace('bro code the fucking controls');
+	}
+	function updateIGNORE():Void{
+		windowMsg.kill();
+	}
+	function updateACCEPT():Void{
+		windowMsg.kill();
+		MusicBeatState.switchState(new states.snc.Update());
+	}
+	function compare(neg:Dynamic, pos:Dynamic) if(neg == pos) return true; else return false;
+	public static function getData() {
+		__curVERSION = Json.parse(getText('assets/archive/data/credits.json'));
+		for(i in __curVERSION.version)
+			curVERSION.push(i);
+
+		var new_ = new Http("https://raw.githubusercontent.com/melodiiCam2B/sonic_ARCHIVED/refs/heads/main/assets/archive/data/data.json");
+		new_.onData = function(data:String) {
+			__webVERSION = Json.parse(data);
+			webVERSION = __webVERSION.version;
+		}
+		new_.request();
+	}
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
 		for(i in __credits.credits)
@@ -116,29 +128,55 @@ class Menu extends MusicBeatState{
 
 		camGame = new FlxCamera();
 
+		camNorm = new FlxCamera();
+		camNorm.bgColor.alpha = 0;
+		camNorm.filtersEnabled = false;
+
 		camText = new FlxCamera();
 		camText.bgColor.alpha = 0;
+		camText.filtersEnabled = false;
+
+		cardCam = new FlxCamera();
+		cardCam.bgColor.alpha = 0;
+		cardCam.filtersEnabled = true;
 
 		camDesc = new FlxCamera();
 		camDesc.bgColor.alpha = 0;
+		camDesc.filtersEnabled = false;
+
+		camErro = new FlxCamera();
+		camErro.bgColor.alpha = 0;
+		camErro.filtersEnabled = false;
 
         camFollow = new FlxObject(0, 0, 1, 1);
 	    add(camFollow);
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
+	    filters.push(new ShaderFilter(__fisheye));
+        FlxG.camera.filters = filters;
+
+		FlxG.cameras.add(camNorm, false);
 		FlxG.cameras.add(camText, false);
+		FlxG.cameras.add(cardCam, false);
         FlxG.cameras.add(camDesc, false);
+		FlxG.cameras.add(camErro, false);
         camText.follow(camFollow, null, 0.10);
 
 		PlayState.isStoryMode = false;
 	}
    	override public function create(){
 		finishTransition();
-		init();
 		// checkVersion();
+		grid = new FlxBackdrop(Paths.image('GRID', 'archive'));
+		grid.velocity.set(40, 40);
+		add(grid);
+
+		init();
+		
 		bg.loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
+		bg.alpha = 0.5;
 		add(bg);
 		bg.screenCenter();
 
@@ -149,9 +187,11 @@ class Menu extends MusicBeatState{
         	options.y = 50 + i * options.height;
         	options.x = 40;
 			options.ID = i;
+			options.camera = camNorm;
         	txtGroup.add(options);
 		}
 
+		selected.camera = camNorm;
 		changeOption();
 		add(selected);
 		add(txtGroup);
@@ -165,6 +205,7 @@ class Menu extends MusicBeatState{
 		cardGroup.screenCenter();
 		storeGroupY = cardGroup.y;
 		cardGroup.y += 720;
+		cardGroup.camera = camNorm;
 		add(cardGroup);
 
 		for(i in 0...creditsStuff.length){
@@ -211,12 +252,14 @@ class Menu extends MusicBeatState{
 		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		missingTextBG.alpha = 0.6;
 		missingTextBG.visible = false;
+		missingTextBG.camera = camErro;
 		add(missingTextBG);
 		
 		missingText = new FlxText(50, 0, FlxG.width, '', 24);
 		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missingText.scrollFactor.set();
 		missingText.visible = false;
+		missingText.camera = camErro;
 		add(missingText);
     }
     override public function update(elapsed:Float){
@@ -307,7 +350,7 @@ class Menu extends MusicBeatState{
 			};
 			txtGroup.forEach(function(spr:FlxText){spr.alpha = 1;});
         	if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN)changeOption(FlxG.keys.justPressed.UP? -1 : 1);
-			if (controls.ACCEPT || FlxG.mouse.justPressed){
+			if (controls.ACCEPT || FlxG.mouse.justPressed && FlxG.mouse.overlaps(txtGroup.members[curSelected])){
 				switch(select[curSelected]){
 					case 'Stage Select':
 						FlxTween.tween(cardGroup, {y: storeGroupY}, 0.5, {onComplete: function(twn:FlxTween){

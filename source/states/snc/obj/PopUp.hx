@@ -63,19 +63,19 @@ class PopUp extends FlxSpriteGroup {
         add(x__box);
 
         x__txt.text = 'X';
-        x__txt.setFormat(Paths.font('pixel.otf'), 14, FlxColor.WHITE);
+        x__txt.setFormat(Paths.font('pixel.otf'), 14, FlxColor.BLACK);
         centerToMidpoint(x__txt, x__box);
         add(x__txt);
 
         x__box.y -= 2;
 
-        ok_box.makeGraphic(20, 20, FlxColor.BLACK);
+        ok_box.makeGraphic(30, 20, FlxColor.BLACK);
         centerToMidpoint(ok_box, inside);
         ok_box.alpha = 0;
         ok_box.y += inside.height/2 - 10;
         add(ok_box);
 
-        ok_txt.text = 'X';
+        ok_txt.text = 'ok';
         ok_txt.setFormat(Paths.font('pixel.otf'), 14, FlxColor.BLACK);
         centerToMidpoint(ok_txt, ok_box);
         add(ok_txt);
@@ -83,7 +83,7 @@ class PopUp extends FlxSpriteGroup {
         ok_box.y -= 2;
 
         name.text = __name;
-        name.setFormat(Paths.font('pixel.otf'), 14, FlxColor.WHITE);
+        name.setFormat(Paths.font('pixel.otf'), 14, FlxColor.BLACK);
         name.y = handle.y + (handle.height - name.height) / 2;
         name.x = inside.x + 4;
         name.y -= 2;
