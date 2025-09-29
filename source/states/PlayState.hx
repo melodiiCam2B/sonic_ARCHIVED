@@ -55,7 +55,7 @@ import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
 
-import states.snc.obj.*;
+import archive.backend.*;
 
 /**
  * This is where all the Gameplay stuff happens and is managed
@@ -2508,8 +2508,8 @@ class PlayState extends MusicBeatState
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 				canResync = false;
-				MusicBeatState.switchState(new states.snc.Menu());
-				states.snc.Menu.startMusic();
+				MusicBeatState.switchState(new archive.Menu());
+				archive.Menu.startMusic();
 				changedDifficulty = false;
 			}
 			transitioning = true;

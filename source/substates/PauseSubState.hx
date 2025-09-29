@@ -323,8 +323,8 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.canResync = false;
 					Mods.loadTopMod();
 					// MusicBeatState.switchState(new states.snc.Menu());
-					FlxG.switchState(new states.snc.Menu());
-					states.snc.Menu.startMusic();
+					FlxG.switchState(new archive.Menu());
+					archive.Menu.startMusic();
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
 					FlxG.camera.followLerp = 0;

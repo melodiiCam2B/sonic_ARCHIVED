@@ -62,10 +62,32 @@ import utils.track.GITHUBtracker;
 import utils.track.SCRIPTtracker;
 class Main extends Sprite{
 
+	public static var fpsVar:Display;
+
+	public static var fps_:FPStracker;
+	public static var dbg_:DEBUGtracker;
+	public static var git_:GITHUBtracker;
+	public static var scp_:SCRIPTtracker;
+
 	private function setGame(){
 		addChild(new Game(game.width, game.height, game.initialState, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		Lib.current.stage.window.visible = true;
-		Lib.current.stage.window.resizable = false;
+		FlxG.mouse.useSystemCursor = true;
+
+		fps_ = new FPStracker();
+		dbg_ = new DEBUGtracker();
+		git_ = new GITHUBtracker();
+		scp_ = new SCRIPTtracker();
+
+		addChild(fps_);
+		addChild(dbg_);
+		addChild(git_);
+		addChild(scp_);
+
+		fps_.visible = ClientPrefs.data.showFPS;
+		dbg_.visible = ClientPrefs.data.showDBG;
+		git_.visible = ClientPrefs.data.showGIT;
+		scp_.visible = ClientPrefs.data.showSCP;
 
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -77,11 +99,9 @@ class Main extends Sprite{
 	}
 
 	public static final game = {
-		// width: 1280, // WINDOW width
-		// height: 720, // WINDOW height
 		width: 940, // UT
 		height: 680, //UT
-		initialState: Init, // initial game state
+		initialState: archive.backend.Init, // initial game state
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
@@ -104,6 +124,7 @@ class Main extends Sprite{
 	}
 
 	private function init():Void{
+		FlxG.autoPause = false;
 		var newBitMap:BitmapData = Assets.getBitmapData("assets/system/images/loading.png");
 		var launcher = new Launcher('Launcher',736,460,true,true, onLauncherClose);
 		launcher.setContent(newBitMap,1,0,0,false);
@@ -117,6 +138,8 @@ class Main extends Sprite{
 	}
 
 	private function makeGame():Void{
+
+
 		#if (cpp && windows)
 			backend.Native.fixScaling();
 		#end

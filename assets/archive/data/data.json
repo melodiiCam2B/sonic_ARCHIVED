@@ -1,4 +1,3 @@
 {
-    "v": 1.0,
-    "d":["sanic", "sunky", "troll"]
+    "version": 0.5
 }

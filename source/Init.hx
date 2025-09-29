@@ -102,7 +102,7 @@ class Init extends MusicBeatState{
 		}
 	}
 	public static function nextState(){
-		FlxG.switchState(new states.snc.Menu());
+		// FlxG.switchState(new states.snc.Menu());
 		// FlxG.switchState(new states.snc.Archive());
 	}
 	override function update(elapsed:Float){

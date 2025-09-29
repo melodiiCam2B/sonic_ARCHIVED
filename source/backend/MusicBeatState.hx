@@ -3,7 +3,7 @@ package backend;
 import flixel.FlxState;
 import backend.PsychCamera;
 import utils.track.SCRIPTtracker;
-import states.snc.obj.*;
+import archive.backend.*;
 class MusicBeatState extends FlxState
 {
 	private var curSection:Int = 0;
