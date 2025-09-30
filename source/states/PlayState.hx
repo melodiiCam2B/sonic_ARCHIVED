@@ -5,7 +5,7 @@ import backend.StageData;
 import backend.WeekData;
 import backend.Song;
 import backend.Rating;
-import utils.track.SCRIPTtracker;
+
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -55,8 +55,6 @@ import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
 
-import archive.backend.*;
-
 /**
  * This is where all the Gameplay stuff happens and is managed
  *
@@ -101,9 +99,7 @@ class PlayState extends MusicBeatState
 	#if HSCRIPT_ALLOWED
 	public var hscriptArray:Array<HScript> = [];
 	#end
-	#if LUA_ALLOWED 
-	public var luaArray:Array<FunkinLua> = []; 
-	#end
+
 	public var BF_X:Float = 770;
 	public var BF_Y:Float = 100;
 	public var DAD_X:Float = 100;
@@ -253,6 +249,7 @@ class PlayState extends MusicBeatState
 
 	// Lua shit
 	public static var instance:PlayState;
+	#if LUA_ALLOWED public var luaArray:Array<FunkinLua> = []; #end
 
 	#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 	private var luaDebugGroup:FlxTypedGroup<psychlua.DebugLuaText>;
@@ -279,9 +276,6 @@ class PlayState extends MusicBeatState
 			Paths.clearUnusedMemory();
 			Language.reloadPhrases();
 		}
-
-		finishTransition();
-
 		nextReloadAll = false;
 
 		startCallback = startCountdown;
@@ -382,8 +376,19 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
-		switch (curStage){
-			case 'stage': new StageWeek1();
+		switch (curStage)
+		{
+			case 'stage': new StageWeek1(); 			//Week 1
+			// case 'spooky': new Spooky();				//Week 2
+			// case 'philly': new Philly();				//Week 3
+			// case 'limo': new Limo();					//Week 4
+			// case 'mall': new Mall();					//Week 5 - Cocoa, Eggnog
+			// case 'mallEvil': new MallEvil();			//Week 5 - Winter Horrorland
+			// case 'school': new School();				//Week 6 - Senpai, Roses
+			// case 'schoolEvil': new SchoolEvil();		//Week 6 - Thorns
+			// case 'tank': new Tank();					//Week 7 - Ugh, Guns, Stress
+			// case 'phillyStreets': new PhillyStreets(); 	//Weekend 1 - Darnell, Lit Up, 2Hot
+			// case 'phillyBlazin': new PhillyBlazin();	//Weekend 1 - Blazin
 		}
 		if(isPixelStage) introSoundsSuffix = '-pixel';
 
@@ -1667,8 +1672,6 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		SCRIPTtracker.hxScript = SCRIPTtracker.allScripts = hscriptArray.length;
-		SCRIPTtracker.luaScript = SCRIPTtracker.allScripts = luaArray.length;
 		if(!inCutscene && !paused && !freezeCamera) {
 			FlxG.camera.followLerp = 0.04 * cameraSpeed * playbackRate;
 			var idleAnim:Bool = (boyfriend.getAnimationName().startsWith('idle') || boyfriend.getAnimationName().startsWith('danceLeft') || boyfriend.getAnimationName().startsWith('danceRight'));
@@ -1892,28 +1895,8 @@ class PlayState extends MusicBeatState
 		var newPercent:Null<Float> = FlxMath.remapToRange(FlxMath.bound(healthBar.valueFunction(), healthBar.bounds.min, healthBar.bounds.max), healthBar.bounds.min, healthBar.bounds.max, 0, 100);
 		healthBar.percent = (newPercent != null ? newPercent : 0);
 
-
-		if (healthBar.percent < 20)
-			iconP1.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent > 85)
-			iconP1.animation.curAnim.curFrame = 2;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
-
-		// Player 2
-		if (healthBar.percent > 85)
-			iconP2.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent < 20)
-			iconP2.animation.curAnim.curFrame = 2;
-		else
-			iconP2.animation.curAnim.curFrame = 0;
-		
-		// iconP1.animation.curAnim.curFrame = (healthBar.percent > 85) ? 2 : 0; 
-		// iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0; 
-
-		// iconP2.animation.curAnim.curFrame = (healthBar.percent > 85) ? 1 : 0; 
-		// iconP2.animation.curAnim.curFrame = (healthBar.percent < 20) ? 2 : 0; 
-
+		iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0; //If health is under 20%, change player icon to frame 1 (losing icon), otherwise, frame 0 (normal)
+		iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0; //If health is over 80%, change opponent icon to frame 1 (losing icon), otherwise, frame 0 (normal)
 		return health;
 	}
 
@@ -1938,7 +1921,7 @@ class PlayState extends MusicBeatState
 					note.resetAnim = 0;
 				}
 		}
-		openSubState(new Pause());
+		openSubState(new archive.backend.Pause());
 
 		#if DISCORD_ALLOWED
 		if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -2510,6 +2493,7 @@ class PlayState extends MusicBeatState
 				canResync = false;
 				MusicBeatState.switchState(new archive.Menu());
 				archive.Menu.startMusic();
+				// FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				changedDifficulty = false;
 			}
 			transitioning = true;
@@ -3206,7 +3190,8 @@ class PlayState extends MusicBeatState
 	}
 
 	var lastStepHit:Int = -1;
-	override function stepHit(){
+	override function stepHit()
+	{
 		super.stepHit();
 
 		if(curStep == lastStepHit) {

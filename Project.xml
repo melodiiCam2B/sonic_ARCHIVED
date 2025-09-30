@@ -12,10 +12,10 @@
 	/>
 
 
-	<icon path="sa.png" size='16'/>
-	<icon path="sa.png" size='32'/>
-	<icon path="sa.png" size='64'/>
-	<icon path="sa.png" />
+	<icon path="sa.png" size='16' embed="true"/>
+	<icon path="sa.png" size='32' embed="true"/>
+	<icon path="sa.png" size='64' embed="true"/>
+	<icon path="sa.png" embed="true"/>
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="1266759928073162832" />
@@ -97,9 +97,6 @@
 	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild"/>
 
 	<assets path='mods' embed="true"/>
-	<assets path='list.txt' rename='modsList.txt' />
-
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 
 	<!-- OpenAL config -->
 	<section if="desktop">

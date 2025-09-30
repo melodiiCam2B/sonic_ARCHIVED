@@ -59,19 +59,35 @@ class Game extends FlxGame
 			onCrash(e);
 	}
 
+    public static function centerInstant() {
+        var resolutionX = Math.ceil(Lib.current.stage.window.display.currentMode.width * Lib.current.stage.window.scale);
+        var resolutionY = Math.ceil(Lib.current.stage.window.display.currentMode.height * Lib.current.stage.window.scale);
+        var xCos = (resolutionX - Lib.application.window.width)/2;
+        var yCos = (resolutionY - Lib.application.window.height)/2;
+
+        Lib.application.window.x = Std.int(xCos);
+        Lib.application.window.y = Std.int(yCos);
+    }
 	/**
 	 * This function is called by `step()` and updates the actual game state.
 	 * May be called multiple times per "frame" or draw call.
 	 */
-
 	var pressed = false;
 	var debug = #if debug true #else false #end;
-	override function update():Void
-	{
+	override function update():Void{
+		if (FlxG.keys.justPressed.Y){
+            FlxTween.cancelTweensOf(FlxG.stage.window, ['x', 'y']);
+            centerInstant();
+            FlxG.stage.window.x -= 150;
+            FlxG.stage.window.y -= 50;
+            FlxTween.tween(FlxG.stage.window, {x: FlxG.stage.window.x + 300}, 1.4, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.35});
+            FlxTween.tween(FlxG.stage.window, {y: FlxG.stage.window.y + 100}, 0.7, {ease: FlxEase.quadInOut, type: PINGPONG});
+        }
+
 		if (FlxG.keys.justPressed.F1 && debug)
 			crashGame();	
 
-		if (FlxG.keys.justPressed.F4)
+		if (FlxG.keys.justPressed.F4 && debug)
 			toggleDebug();
 
 		try

@@ -1,7 +1,6 @@
 {
 	"song": {
 		"player1": "bf",
-		"events": [],
 		"gfVersion": "gf",
 		"notes": [
 			{
@@ -4313,7 +4312,6 @@
 		"player2": "dad",
 		"player3": "gf",
 		"song": "milk",
-		"arrowSkin": "",
 		"needsVoices": true,
 		"validScore": true,
 		"bpm": 180,

@@ -8,16 +8,21 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import lime.app.Application;
 import flixel.util.FlxTimer;
-
-class Crash extends FlxState
-{
+import openfl.media.Sound;
+import openfl.system.System;
+import openfl.utils.AssetType;
+import openfl.utils.Assets as OpenFlAssets;
+import sys.FileSystem;
+import sys.io.File;
+class Crash extends FlxState{	
+	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	var _bg = new FlxSprite();
 	var _birder = new FlxSprite();
 
 	public var error:String;
 	public var errorName:String;
 	public var report:FlxText = new FlxText(0, 0, FlxG.width / 1.5);
-
+	public static var trackSound:Map<String, Sound> = [];
 	public function new(prevState:FlxState, error:String, errorName:String):Void{
 		this.error = error;
 		this.errorName = errorName;
@@ -26,6 +31,7 @@ class Crash extends FlxState
 	}
 
 	override public function create(){
+		FlxG.sound.playMusic(sounds('archive/music/crash'));
 		super.create();
 
 		DiscordClient.changePresence("Crash Handler", 'utils.sys.Crash','silly', null, null, 'crash');
@@ -49,11 +55,28 @@ class Crash extends FlxState
 	}
 
 	override function update(elapsed:Float){
-		if (FlxG.keys.justPressed.SPACE)MusicBeatState.switchState(new states.sillys.WoManState());
+		if (FlxG.keys.justPressed.SPACE) goswitch();
 		super.update(elapsed);
 		mouseLook();
 	}
 
+	function goswitch(){
+		MusicBeatState.switchState(new archive.Menu());
+		archive.Menu.startMusic();
+	}
+
+	function path(path:String){
+		if (!FileSystem.exists(path)){
+			trace('could not find $path');
+			return null;
+		}
+		return path;
+	}
+
+	function sounds(file:String){
+		trackSound.set(file, OpenFlAssets.getSound(path('assets/'+file+'.'+SOUND_EXT)));
+		return trackSound.get(file);
+	}
 	var xx:Float = 0;
 	var yy:Float = 0;
 	var mx:Float = 0;

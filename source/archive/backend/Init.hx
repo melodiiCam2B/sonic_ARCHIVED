@@ -15,6 +15,7 @@ import flixel.input.gamepad.FlxGamepad;
 import haxe.Json;
 
 class Init extends MusicBeatState{
+	public static var checkedUpdate = false;
 	public static var move = false;
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
@@ -22,6 +23,7 @@ class Init extends MusicBeatState{
 	var bot = new FlxSprite();
     var top = new FlxSprite();
 	override public function create():Void{
+		archive.Menu.startMusic();
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		

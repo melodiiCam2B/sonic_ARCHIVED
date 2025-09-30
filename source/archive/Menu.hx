@@ -31,7 +31,15 @@ import archive.shaders.SncTypedef.CreditDef;
 import archive.shaders.SncTypedef.Version;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
+import openfl.media.Sound;
+import openfl.system.System;
+import openfl.utils.AssetType;
+import openfl.utils.Assets as OpenFlAssets;
+import sys.FileSystem;
+import sys.io.File;
 class Menu extends MusicBeatState{
+	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	public static var trackSound:Map<String, Sound> = [];
 	public static var menuMusic:String = 'kamiOni';
 	var creditsStuff:Array<Array<String>> = [];
     var emptyDesc:String = ':< wompity womp womp >:\n(this means there\'s nothing there)';
@@ -73,9 +81,11 @@ class Menu extends MusicBeatState{
 	var missingText:FlxText;
 	var filters:Array<BitmapFilter> = [];
 	var __fisheye = new FishEye();
+	
 	public static function startMusic(){ 
-		// FlxG.sound.playMusic(Paths.music(menuMusic));
+		FlxG.sound.playMusic(sounds('archive/music/'+menuMusic));
 	}
+
 	function init(){
 		__credits = Json.parse(getText('assets/archive/data/credits.json'));
 		for(i in __credits.credits)
@@ -123,8 +133,6 @@ class Menu extends MusicBeatState{
         camText.follow(camFollow, null, 0.10);
 
 		PlayState.isStoryMode = false;
-
-		trace(Log_.green('Finished Setup!'));
 	}
 
 	function outDated():Void{
@@ -139,7 +147,7 @@ class Menu extends MusicBeatState{
 
 		init();
 
-		CheckVer.check(outDated);
+		if(!Init.checkedUpdate)CheckVer.check(outDated);
 		
 		bg.loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
@@ -229,6 +237,7 @@ class Menu extends MusicBeatState{
 		missingText.camera = camErro;
 		add(missingText);
     }
+
     override public function update(elapsed:Float){
 		if(freePlay){
 			if (FlxG.mouse.justPressed){
@@ -258,7 +267,6 @@ class Menu extends MusicBeatState{
 					if(FlxG.mouse.justPressed){
 						var songLowercase:String = Paths.formatToSongPath(memb.title);
 						var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-						trace(poop);
 						Song.loadFromJson(poop, songLowercase);
 						PlayState.storyDifficulty = curDifficulty;
 
@@ -337,11 +345,13 @@ class Menu extends MusicBeatState{
 			}
 		}
     }
+
 	function updateCredits(_i:Bool){
 		camText.visible = _i;
 		camDesc.visible = _i;
 		credits = _i;
 	}
+
 	function setBack(){
 		new FlxTimer().start(0.04, function(tmr:FlxTimer) {
   			missingText.visible = false;
@@ -349,6 +359,7 @@ class Menu extends MusicBeatState{
 			missingText.text = '';
         });
 	}
+
 	function changeSub(?i:Int = 0){
 		curOption = FlxMath.wrap(curOption + i, 0, select.length - 1);
 
@@ -356,6 +367,7 @@ class Menu extends MusicBeatState{
 		curMember.text = 'Settings > ';
 		setText(options[curOption], curMember);
 	}
+
     public function setText(txt:String, txtSpr:FlxText) {
         var toInt:Int = txt.length;
 
@@ -373,6 +385,7 @@ class Menu extends MusicBeatState{
             }
         }, toInt);
     }
+
 	function openSelectedSubstate(label:String) {
 		switch(label){
 			case 'Controls':
@@ -385,6 +398,7 @@ class Menu extends MusicBeatState{
 				openSubState(new archive.opt.subs.Gameplay());
 		}
 	}
+
 	function changeOption(?i:Int = 0){
 		curSelected = FlxMath.wrap(curSelected + i, 0, select.length - 1);
 
@@ -393,6 +407,7 @@ class Menu extends MusicBeatState{
 		selected.x = curMember.x + (curMember.width - selected.width) / 2;
         selected.y = curMember.y + (curMember.height - selected.height) / 2;
 	}
+
 	public static function boundTo(value:Float, min:Float, max:Float):Float {
 		var newValue:Float = value;
 		if (newValue < min)
@@ -401,6 +416,7 @@ class Menu extends MusicBeatState{
 			newValue = max;
 		return newValue;
 	}
+
 	function changeCredit(?i:Int = 0){
         curCredit = FlxMath.wrap(curCredit + i, 0, creditsStuff.length - 1);
         if(unselectableCheck(curCredit)){ 
@@ -417,9 +433,11 @@ class Menu extends MusicBeatState{
 
         camFollow.setPosition(450, curMember.y);
     }
+
 	private function unselectableCheck(num:Int):Bool {
 		return creditsStuff[num].length <= 1;
 	}
+
     public function setDescJob(txt:String, txtSpr:FlxText) {
         txtSpr.text = '';
         var toInt:Int = txt.length;
@@ -434,6 +452,7 @@ class Menu extends MusicBeatState{
             }
         }, toInt);
     }
+
     public function setDescTxt(txt:String, txtSpr:FlxText) {
         if(txt == '')txt = emptyDesc;
         txtSpr.text = '';
@@ -449,6 +468,7 @@ class Menu extends MusicBeatState{
             }
         }, toInt);
     }
+
 	public static function path(path:String){
 		if (!FileSystem.exists(path)){
 			trace('could not find $path');
@@ -456,8 +476,14 @@ class Menu extends MusicBeatState{
         }
 		return path;
     }
+
 	inline static public function getText(key:String):String{
 		var path:String = path(key);
 		return (FileSystem.exists(path)) ? File.getContent(path) : null;
+	}
+
+	inline static public function sounds(file:String){
+		trackSound.set(file, OpenFlAssets.getSound(path('assets/'+file+'.'+SOUND_EXT)));
+		return trackSound.get(file);
 	}
 }

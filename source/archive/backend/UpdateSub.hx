@@ -5,6 +5,7 @@ import archive.obj.*;
 import archive.backend.utils.*;
 class UpdateSub extends MusicBeatSubstate{
     var windowMsg:PopUp;
+	var updateProg:PopUpBar;
     var bg = new FlxSprite();
     private var updateCam:FlxCamera;
     var ver:String;
@@ -21,6 +22,7 @@ class UpdateSub extends MusicBeatSubstate{
 		add(bg);
         bg.camera = updateCam;
 		bg.screenCenter();
+		Init.checkedUpdate = true;
 
         
 		
@@ -43,18 +45,45 @@ class UpdateSub extends MusicBeatSubstate{
 		add(windowMsg);
 		trace(Log_.red('A difference in the local and github versions was found'));
     }
+	/**
+	[0] - parsing file
+	[1] - downloading file
+	[3] - unzipping file
+	[4] - post update check 
+	(seeing if data.json was updated correctly)
+	 */
 	function updateIGNORE():Void{
         FlxG.cameras.remove(updateCam, true);
         close();
 		windowMsg.kill();
 	}
 	function updateACCEPT():Void{
-		windowMsg.kill();
+		windowMsg.x += 25;
+		updateProg = new PopUpBar('Updating!', 4,updateFINISHED, updateCANCEL);
+		updateProg.camera = updateCam;
+		updateProg.screenCenter();
+		add(updateProg);
         //might swap out to non mutli thread
         //execute((_)->{Zip_.uncompressZipAsync(reader, './', null, progress.curZipProgress);});
 	    //we're going to run an Async thread for the update download using Zip.uncompressZipAsync()
 	    //this may make it slower for some, but it's easier on my end
 	}
+	function updateFINISHED():Void{
+		//open window to notify you of the successfull update and que a game reset to reload
+		//both options should be - updateFINALIZED, you already finished the update
+	}
+	function updateFINALIZED():Void{
+		// reset to reload
+	}
+	function updateCANCEL():Void{
+		if(updateProg.proggressBar.value < 2) updateSTOP(); 
+		// update can't be cancelled if progress is progress is greater than 3
+	}//updateCANCEL calls a new window " are you sure? " and pauses the progress
+	function updateSTOP():Void{
+		updateProg.kill();
+		updateIGNORE();
+	}//updateSTOP actually stops the update
+
    // var updater:AsyncUpdater;
 	var progressBar:FlxBar;
     var updateThreads:Array<Thread> = [];
