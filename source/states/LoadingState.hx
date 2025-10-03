@@ -70,7 +70,7 @@ class LoadingState extends MusicBeatState
 
 	override function create(){
 
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('load'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('funkay'));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.setGraphicSize(Std.int(bg.width * 1.175),Std.int(bg.width * 1.175));
 		bg.updateHitbox();

@@ -112,7 +112,7 @@ class ClientPrefs {
 		'note_left'		=> [A, LEFT],
 		'note_down'		=> [S, DOWN],
 		'note_right'	=> [D, RIGHT],
-		
+		// only touch the note ones, who gives a fuck about the rest, it's all mouse control
 		'ui_up'			=> [W, UP],
 		'ui_left'		=> [A, LEFT],
 		'ui_down'		=> [S, DOWN],

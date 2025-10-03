@@ -24,21 +24,6 @@ class UpdateSub extends MusicBeatSubstate{
 		bg.screenCenter();
 		Init.checkedUpdate = true;
 
-        
-		
-
-        //adding new threads for each, will be destroyed at a later date
-    	// for(i in 0...4)
-		// 	updateThreads.push(Thread.createWithEventLoop(function(){Thread.current().events.promise();}));
-
-        //show progressBar if the update was accepted
-        // progressBar = new FlxBar(0, FlxG.height - 75, LEFT_TO_RIGHT, FlxG.width, 75);
-		// progressBar.createGradientBar([0xFF000000], [0xFF000000, 0xFF111111, 0xFF222222, 0xFF444444, 0xFF888888, -1], 1, 90);
-		// progressBar.setRange(0, 4);
-		// add(progressBar);
-
-
-
         windowMsg = new PopUp('WARNING!', CheckVer.update_, updateIGNORE, updateACCEPT);
 		windowMsg.camera = updateCam;
 		windowMsg.screenCenter();
@@ -46,8 +31,8 @@ class UpdateSub extends MusicBeatSubstate{
 		trace(Log_.red('A difference in the local and github versions was found'));
     }
 	/**
-	[0] - parsing file
-	[1] - downloading file
+	[1] - parsing file
+	[2] - downloading file
 	[3] - unzipping file
 	[4] - post update check 
 	(seeing if data.json was updated correctly)
