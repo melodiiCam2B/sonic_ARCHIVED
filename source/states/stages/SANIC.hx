@@ -3,17 +3,10 @@ package states.stages;
 import states.stages.objects.*;
 
 class SANIC extends BaseStage{
-	var bg = new FlxSprite();
 	var porn = new FlxSprite();
-	override function create(){
-		bg.loadGraphic(Paths.image('stages/sanicbg', 'archive'));
-		bg.setGraphicSize(FlxG.width, FlxG.height);
-		add(bg);
-		bg.screenCenter();
-	}
 	
 	override function createPost(){
-		porn.loadGraphic(Paths.image('stages/white', 'archive'));
+		porn.loadGraphic(Paths.image('stages/white'));
 		porn.setGraphicSize(FlxG.width, FlxG.height);
 		porn.alpha = 0;
 		add(porn);
@@ -29,3 +22,4 @@ class SANIC extends BaseStage{
 		}
 	}
 }
+

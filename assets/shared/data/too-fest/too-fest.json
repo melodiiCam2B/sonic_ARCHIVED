@@ -1,7 +1,14 @@
 {
 	"player1": "bf",
 	"player2": "dad",
-	"events": [],
+	"events": [
+		[
+			1411.76470588235,
+			[
+				["sexualHarassment", "0.5", ""]
+			]
+		]
+	],
 	"notes": [],
 	"gfVersion": "gf",
 	"disableNoteRGB": false,

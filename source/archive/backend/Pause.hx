@@ -10,15 +10,14 @@ class Pause extends MusicBeatSubstate{
     private var bot = new FlxSprite();
     private var top = new FlxSprite();
 
-	var options:Array<String> = ['Resume', 'Controls','Exit to menu'];
+	var options:Array<String> = ['Resume', 'Restart', 'Controls','Exit to menu'];
     var curOption:Int = 0;
-    var allow = false;
+    var allow = true;
 	var txtGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
 	var selected = new FlxSprite();
     var descBox = new FlxSprite();
     var descTxt = new FlxText();
     override function create() {
-        allow = false;
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
@@ -41,6 +40,9 @@ class Pause extends MusicBeatSubstate{
 
         add(top);
         add(bot);
+
+		top.alpha = 0;
+		bot.alpha = 0;
 
 		for(i in 0...options.length){
 			var txt = new FlxText();
@@ -77,8 +79,6 @@ class Pause extends MusicBeatSubstate{
                     FlxTween.tween(descTxt,{y: 50},0.55,{ease: FlxEase.circInOut, onUpdate: (_)->{
                             descBox.x = descTxt.x + (descTxt.width - descBox.width) / 2;
                             descBox.y = descTxt.y + (descTxt.height - descBox.height) / 2;
-                        },onComplete: function(t:FlxTween){
-                            allow = true;
                         }
                     });
                     txtGroup.forEach(function(spr:FlxText){
@@ -93,7 +93,7 @@ class Pause extends MusicBeatSubstate{
         if(allow){
         	for (i in 0...options.length){
 				var distItem:Int = -1;
-				var memb:FlxSprite = txtGroup.members[i];
+				var memb:FlxText = txtGroup.members[i];
    		    	if(FlxG.mouse.overlaps(memb)){
 					distItem = i;
 					curOption = distItem;
@@ -101,7 +101,7 @@ class Pause extends MusicBeatSubstate{
 				}
 			};
             if(FlxG.keys.justPressed.UP ||FlxG.keys.justPressed.DOWN)changeOption(FlxG.keys.justPressed.UP? -1 : 1);
-            if(controls.ACCEPT || FlxG.mouse.justPressed){
+            if(controls.ACCEPT || FlxG.mouse.justPressed && FlxG.mouse.overlaps(txtGroup.members[curOption])){
                 switch(options[curOption]){
                     case 'Resume':
                         FlxTween.tween(top,{x: -FlxG.width},0.5,{ease: FlxEase.circInOut});
@@ -109,7 +109,9 @@ class Pause extends MusicBeatSubstate{
 				            function(t:FlxTween) {
                                 close();
 				            }
-			            });         
+			            }); 
+					case 'Restart':
+						 restartSong();
                     case 'Controls':
                         FlxTween.tween(top,{x: -FlxG.width},0.5,{ease: FlxEase.circInOut});
 			            FlxTween.tween(bot,{x: FlxG.width},0.5,{ease: FlxEase.circInOut,onComplete:
@@ -135,6 +137,14 @@ class Pause extends MusicBeatSubstate{
             }
         }
     }
+
+	public static function restartSong(){
+		PlayState.instance.paused = true;
+		FlxG.sound.music.volume = 0;
+		PlayState.instance.vocals.volume = 0;
+		FlxG.resetState();
+	}
+
 	function changeOption(?i:Int = 0){
 		curOption = FlxMath.wrap(curOption + i, 0, options.length - 1);
 

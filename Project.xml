@@ -36,7 +36,7 @@
 	<define name="MODS_ALLOWED" if="desktop" />
 	<define name="HSCRIPT_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
-	<define name="ACHIEVEMENTS_ALLOWED" />
+
 	<define name="DISCORD_ALLOWED" />
 	<define name="TRANSLATIONS_ALLOWED" />
 	<define name="IRIS_DEBUG"/>
@@ -60,7 +60,7 @@
 	<window if="html5" resizable="true" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="false" vsync="false"/>
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
@@ -78,17 +78,11 @@
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 	<define name="CRASH_HANDLER" if="desktop release" />
 
-	<assets path="assets" embed="true"/>
-	<assets path="assets/fonts" />
-	<assets path="assets/system" />
-	<assets path="assets/shared"        exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"        exclude="*.mp3" unless="web"/>
-	<assets path="assets/songs"         exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/archive"         exclude="*.ogg" if="web"/>
-	<assets path="assets/archive"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week_assets"   rename="assets" exclude="*.ogg" if="web"/>
-	<assets path="assets/week_assets"   rename="assets" exclude="*.mp3" unless="web"/>
+	<assets path="assets" if="debug"/>
+	<assets path="assets" embed="true"  unless="debug"/>
+	<assets path="assets" exclude="*.ogg" if="web"/>
+	<assets path="assets" exclude="*.mp3" unless="web"/>
+
 
 	<haxelib name="grig.audio"/>
 	<haxelib name="funkin.vis"/>
