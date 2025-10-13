@@ -78,8 +78,7 @@
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 	<define name="CRASH_HANDLER" if="desktop release" />
 
-	<assets path="assets" if="debug"/>
-	<assets path="assets" embed="true"  unless="debug"/>
+	<assets path="assets"/>
 	<assets path="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets" exclude="*.mp3" unless="web"/>
 

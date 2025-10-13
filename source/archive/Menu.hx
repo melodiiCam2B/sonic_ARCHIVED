@@ -1,13 +1,7 @@
 package archive;
-
-import flixel.*;
-import openfl.*;
-import haxe.*;
-import sys.*;
-import lime.*;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxState;
+import backend.WeekData;
+import backend.Highscore;
+import backend.Song;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -15,12 +9,7 @@ import flixel.math.FlxMath;
 import flixel.addons.display.FlxBackdrop;
 import utils.Path;
 import utils.utilities.WinUtils;
-import states.editors.MasterEditorMenu;
-import options.OptionsState;
 import flixel.addons.display.FlxBackdrop;
-import backend.WeekData;
-import backend.Highscore;
-import backend.Song;
 import states.PlayState;
 import archive.backend.*;
 import archive.backend.utils.*;
@@ -37,6 +26,8 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import sys.FileSystem;
 import sys.io.File;
+import utils.sys.Launcher;
+import openfl.display.BitmapData;
 class Menu extends MusicBeatState{
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	public static var trackSound:Map<String, Sound> = [];
