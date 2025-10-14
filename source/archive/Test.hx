@@ -1,11 +1,12 @@
 package archive;
 import archive.obj.*;
+import utils.utilities.*;
 class Test extends MusicBeatState{
    	override public function create(){
         finishTransition();
         var bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
-		add(bg);
+		// add(bg);
 		bg.screenCenter();
 
         var descJob = new FlxText();
@@ -13,7 +14,7 @@ class Test extends MusicBeatState{
         descJob.text = 'this is here for testing\nif you see this state... um\n\noopsies?';
         descJob.screenCenter();
         add(descJob);
-
+        Util.setWinAlpha(0);
     }
     override public function update(elapsed:Float){
         if (controls.BACK) MusicBeatState.switchState(new archive.Menu());
