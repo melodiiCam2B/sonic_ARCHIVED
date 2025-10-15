@@ -131,13 +131,12 @@ class Menu extends MusicBeatState{
 	}
 
    	override public function create(){
-		finishTransition();
 		grid = new FlxBackdrop(Paths.image('GRID', 'archive'));
 		grid.velocity.set(40, 40);
 		add(grid);
 
 		init();
-
+		finishTransition();
 		if(!Init.checkedUpdate)CheckVer.check(outDated);
 		
 		bg.loadGraphic(Paths.image('MENU', 'archive'));
@@ -212,7 +211,7 @@ class Menu extends MusicBeatState{
         descTxt.camera = camDesc;
         add(descTxt);
         
-        changeCredit();
+        changeCredit(1);
 		updateCredits(false);
 
 		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -295,6 +294,7 @@ class Menu extends MusicBeatState{
 			if(FlxG.keys.justPressed.LEFT ||FlxG.keys.justPressed.RIGHT) changeSub(FlxG.keys.justPressed.LEFT? -1 : 1);
 			if (controls.ACCEPT) openSelectedSubstate(options[curOption]);
 			if (controls.BACK){
+				ClientPrefs.saveSettings();
 				var curMember:FlxText = txtGroup.members[curSelected];
 				curMember.text = 'Settings';
 				changeOption();
@@ -352,7 +352,7 @@ class Menu extends MusicBeatState{
 	}
 
 	function changeSub(?i:Int = 0){
-		curOption = FlxMath.wrap(curOption + i, 0, select.length - 1);
+		curOption = FlxMath.wrap(curOption + i, 0, options.length - 1);
 
 		var curMember:FlxText = txtGroup.members[curSelected];
 		curMember.text = 'Settings > ';

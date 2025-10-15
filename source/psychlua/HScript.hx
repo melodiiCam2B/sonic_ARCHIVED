@@ -147,13 +147,13 @@ class HScript extends Iris
 		set('Flx3DUtil', flx3d.Flx3DUtil);
 		set('Flx3DView', flx3d.Flx3DView);
 		set('Mesh', away3d.entities.Mesh);
-
+		set('CppAPI', archive.cpp.CppAPI);
+		set('PopUp', archive.obj.PopUp);
+		
 		// Some very commonly used classes
 		set('Type', Type);
-		#if sys
 		set('File', File);
 		set('FileSystem', FileSystem);
-		#end
 		set('FlxG', flixel.FlxG);
 		set('FlxMath', flixel.math.FlxMath);
 		set('FlxSprite', flixel.FlxSprite);

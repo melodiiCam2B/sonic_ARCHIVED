@@ -24,7 +24,7 @@ import openfl.display.StageScaleMode;
 import lime.app.Application;
 import states.TitleState;
 import backend.Native;
-
+import archive.cpp.*;
 import utils.sys.Launcher;
 import utils.utilities.WinUtils;
 #if HSCRIPT_ALLOWED
@@ -78,7 +78,7 @@ class Main extends Sprite{
 		dbg_ = new DEBUGtracker();
 		git_ = new GITHUBtracker();
 		scp_ = new SCRIPTtracker();
-
+//remove trackers - insert better tracker
 		addChild(fps_);
 		addChild(dbg_);
 		addChild(git_);
@@ -91,11 +91,13 @@ class Main extends Sprite{
 
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		if(ClientPrefs.data.pcFuckery){
+			Util.setHeaderColor(true, 0, 0, 0);//check windows version - above 10 use true
+			CppAPI.removeWindowIcon();
+			cpp.NativeGc.enable(true);
+			cpp.NativeGc.run(true);
+		}
 
-		Util.setHeaderColor(true, 0, 0, 0);
-		Util.headerFunc(true);
-		cpp.NativeGc.enable(true);
-		cpp.NativeGc.run(true);
 	}
 
 	public static final game = {

@@ -4,7 +4,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import utils.*;
 import utils.shaders.*;
-
+import archive.cpp.*;
 import backend.WeekData;
 
 import flixel.input.keyboard.FlxKey;
@@ -23,6 +23,7 @@ class Init extends MusicBeatState{
 	var bot = new FlxSprite();
     var top = new FlxSprite();
 	override public function create():Void{
+		CppAPI.setOld();
 		archive.Menu.startMusic();
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -54,10 +55,17 @@ class Init extends MusicBeatState{
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		//below system would be changed
+		Lib.application.window.onClose.add(reset);
+		// below system would be changed
 		if(FlxG.save.data.seenWarning == null)
 			openSubState(new WarningSubState());
 		else move = true;
+	}
+
+	public static function reset():Void {
+		CppAPI.restoreTaskbar();
+		CppAPI.restoreWindows();
+        CppAPI.setWallpaper('old');
 	}
 
 	override function update(elapsed:Float){
@@ -85,23 +93,22 @@ class WarningSubState extends MusicBeatSubstate
 		bg.alpha = 0.0;
 		add(bg);
 
-		redText = new FlxText(0, -70, FlxG.width,'!WARNING!',32);
+		redText = new FlxText(0,-70, FlxG.width,'!WARNING!',32);
 		redText.setFormat(Paths.font("vcr.ttf"), 50, FlxColor.RED, CENTER);
 		redText.scrollFactor.set();
 		redText.alpha = 1;
 		add(redText);
 
-		warnText = new FlxText(0, -70, FlxG.width,'',16);
+		warnText = new FlxText(0, 0, FlxG.width,'',16);
 		warnText.setFormat(Paths.font("vcr.ttf"), 25, FlxColor.WHITE, CENTER);
-		warnText.text=
-	   '\n\n----------------------------------------------\n
+		warnText.text='\n----------------------------------------------\n
 			This application may contain flashing lights, loud sounds and graphic imagery\n
-			If you\'re sensitive to any of these these, player/viewer discretion is adviced!\n\n
+			If you\'re sensitive to any of these these, player/viewer discretion is advised!\n
 			If you experience nausea, dizziness, sore/dry eyes or disorientation\n
 			please stop playing and seek medical help\n
-			Remember that staying safe is more important!
-		  \n----------------------------------------------\n
-			Thank you for playing!';
+			Remember that staying safe is more important!\n
+			----------------------------------------------\n
+			Thank you For Playing and Stay safe <3';
 		warnText.scrollFactor.set();
 		warnText.y += redText.height + 2;
 		warnText.alpha = 0.0;
@@ -110,7 +117,7 @@ class WarningSubState extends MusicBeatSubstate
 
 		FlxTween.tween(bg, { alpha: 0.8 }, 0.6, { ease: FlxEase.sineIn });
 		FlxTween.tween(warnText, { alpha: 1.0 }, 0.6, { ease: FlxEase.sineIn });
-		FlxTween.tween(redText, {y: warnText.y - redText.height }, 0.8, { ease: FlxEase.sineIn, onComplete: (_) -> {finT = true;} });
+		FlxTween.tween(redText, {y: 10 }, 0.8, { ease: FlxEase.sineIn, onComplete: (_) -> {finT = true;} });
 	}
 
 	override function update(elapsed:Float){

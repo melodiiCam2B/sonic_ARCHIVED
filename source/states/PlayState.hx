@@ -641,6 +641,7 @@ class PlayState extends MusicBeatState
 		cachePopUpScore();
 
 		if(eventNotes.length < 1) checkEventNote();
+		finishTransition();
 	}
 
 	function set_songSpeed(value:Float):Float
