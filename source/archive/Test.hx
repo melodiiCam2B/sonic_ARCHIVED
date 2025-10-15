@@ -3,10 +3,14 @@ import archive.obj.*;
 import utils.utilities.*;
 import archive.cpp.*;
 import archive.backend.*;
+import archive.shaders.*;
+import openfl.filters.ShaderFilter;
+import openfl.filters.BitmapFilter;
+import flixel.addons.display.FlxRuntimeShader;
 class Test extends MusicBeatState{
 	var descJob = new FlxText();
+	var __shader = new FishEye();
    	override public function create(){
-
 		var virtuabg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF571900);
 		virtuabg.setGraphicSize(Std.int(virtuabg.width * 10));
 		virtuabg.scrollFactor.set(0, 0);
@@ -15,6 +19,7 @@ class Test extends MusicBeatState{
         finishTransition();
         var bg = new FlxSprite().loadGraphic(Paths.image('MENU', 'archive'));
 		bg.setGraphicSize(FlxG.width, FlxG.height);
+		bg.alpha = 0.5;
 		// add(bg);
 		bg.screenCenter();
 
@@ -22,18 +27,20 @@ class Test extends MusicBeatState{
         descJob.text = 'this is here for testing\nif you see this state... um\n\noopsies?';
         descJob.screenCenter();
         add(descJob);
-        CppAPI.hideWindows();
-		CppAPI.hideTaskbar();
         CppAPI.setTransparency(Lib.application.window.title, 0x001957);
-		var relPath:String = FileSystem.absolutePath("assets\\archive\\images\\doorlol.jpeg");
-		relPath = relPath.replace("/", "\\");
-		CppAPI.setWallpaper(relPath);
+		// var relPath:String = FileSystem.absolutePath("assets\\archive\\images\\doorlol.jpeg");
+		// relPath = relPath.replace("/", "\\");
+		// CppAPI.setWallpaper(relPath);
 
         FlxG.stage.window.x -= 150;
         FlxG.stage.window.y -= 50;
         FlxTween.tween(FlxG.stage.window, {x: FlxG.stage.window.x + 300}, 1.4, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.35});
         FlxTween.tween(FlxG.stage.window, {y: FlxG.stage.window.y + 100}, 0.7, {ease: FlxEase.quadInOut, type: PINGPONG});
+	    filters.push(new ShaderFilter(__shader));
+        FlxG.camera.filters = filters;
     }
+	var filters:Array<BitmapFilter> = [];
+
     override public function update(elapsed:Float){
 		__centerPoint(descJob);
 
